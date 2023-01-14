@@ -1,0 +1,31 @@
+{
+  "name": "graphql-codegen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GraphQL Code Generator",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist node_modules .turbo",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "update": "pnpm update --latest && pnpm install && pnpm generate",
+    "codegen": "graphql-codegen-esm --config src/codegen.ts"
+  },
+  "author": "",
+  "license": "UNLICENCED",
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.0",
+    "@types/node": "20.3.1",
+    "eslint": "^8.42.0",
+    "eslint-config-custom": "workspace:*",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "5.1.3"
+  },
+  "dependencies": {
+  }
+}

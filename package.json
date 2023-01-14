@@ -1,0 +1,29 @@
+{
+  "name": "teacherfox",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel --concurrency=20",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "update": "turbo run update"
+  },
+  "devDependencies": {
+    "@types/prettier": "^2.7.2",
+    "eslint-config-custom": "workspace:*",
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@7.5.2"
+}

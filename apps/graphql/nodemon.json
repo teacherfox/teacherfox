@@ -1,0 +1,4 @@
+{
+  "watch": ["src", "../../packages/logger/src"],
+  "ext": "ts,json"
+}

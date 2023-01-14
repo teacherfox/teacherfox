@@ -1,0 +1,62 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../.prisma"
+}
+
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
+model Post {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt   DateTime  @default(now())
+  description String
+  url         String
+  comments    Comment[]
+  postedBy    User      @relation(fields: [postedById], references: [id])
+  postedById  String    @db.Uuid
+  votes       Vote[]
+}
+
+model Comment {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  body   String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+}
+
+model User {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  email            String    @unique
+  password         String
+  posts            Post[]
+  votes            Vote[]
+  messagesSent     Message[] @relation("senderUserRel")
+  messagesReceived Message[] @relation("receiverUserRel")
+}
+
+model Vote {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+
+  @@unique([postId, userId])
+}
+
+model Message {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  message      String
+  senderId     String   @db.Uuid
+  senderUser   User     @relation("senderUserRel", fields: [senderId], references: [id])
+  receiverId   String   @db.Uuid
+  receiverUser User     @relation("receiverUserRel", fields: [receiverId], references: [id])
+  createdAt    DateTime @default(now())
+}

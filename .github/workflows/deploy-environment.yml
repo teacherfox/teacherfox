@@ -1,0 +1,25 @@
+name: Deploy prod
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy_graphql:
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+    uses: ./.github/workflows/build-service.yml
+    secrets:
+      aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+    with:
+      aws_region: ${{ vars.AWS_REGION }}
+      environment: prod
+      service_name: graphql
