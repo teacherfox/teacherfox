@@ -27,7 +27,7 @@ resource "aws_route53_record" "dkim" {
 resource "aws_route53_record" "mail" {
   count   = var.environment == "prod" ? 1 : 0
   zone_id = aws_route53_zone.teacherfox.zone_id
-  name    = "mail"
+  name    = ""
   type    = "MX"
   ttl     = "300"
   records = ["10 mx.zoho.eu.", "20 mx2.zoho.eu.", "50 mx2.zoho.eu."]
