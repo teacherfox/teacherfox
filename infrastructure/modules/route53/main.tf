@@ -3,11 +3,11 @@ locals {
 }
 
 resource "aws_route53_zone" "teacherfox" {
-  name         = var.environment == "production" ? local.domain : "${var.environment}.${local.domain}"
+  name         = var.environment == "prod" ? local.domain : "${var.environment}.${local.domain}"
 }
 
 resource "aws_route53_record" "zoho_verification" {
-  count   = var.environment == "production" ? 1 : 0
+  count   = var.environment == "prod" ? 1 : 0
   zone_id = aws_route53_zone.teacherfox.zone_id
   name    = "zoho_verification"
   type    = "TXT"
@@ -16,7 +16,7 @@ resource "aws_route53_record" "zoho_verification" {
 }
 
 resource "aws_route53_record" "mail" {
-  count   = var.environment == "production" ? 1 : 0
+  count   = var.environment == "prod" ? 1 : 0
   zone_id = aws_route53_zone.teacherfox.zone_id
   name    = "mail"
   type    = "MX"
