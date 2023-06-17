@@ -3,7 +3,7 @@ variable "default_tags" {
 
     Environment = "Development"
     ManagedBy   = "terraform"
-    Project     = "learn-tfc-aws"
+    Project     = "teacherfox-dev"
 
   }
   description = "Default Tags for Auto Scaling Group"
@@ -37,11 +37,5 @@ provider "aws" {
 
 data "tfe_outputs" "prod_outputs" {
   organization = "teacherfox"
-  workspace = "teacherfox-prod"
-}
-
-module "s3" {
-  for_each = toset(data.tfe_outputs.prod_outputs.nonsensitive_values.developers)
-  source = "../../modules/s3"
-  environment = "${var.environment}-${each.key}"
+  workspace = "teacherfox-dev"
 }

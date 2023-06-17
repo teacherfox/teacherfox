@@ -1,3 +1,3 @@
 output "developers" {
-  value = local.developers
+  value = concat(local.developers, local.administrators)
 }
