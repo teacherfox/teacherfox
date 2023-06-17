@@ -61,7 +61,7 @@ jobs:
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
           context: .
-          file: ./apps/${{ inputs.service_name }}/Dockerfile1
+          file: ./apps/${{ inputs.service_name }}/Dockerfile
           platforms: linux/arm64
           cache-from: type=registry,ref=ghcr.io/teacherfox/graphql:prod-cache
           cache-to: type=registry,ref=ghcr.io/teacherfox/graphql:prod-cache,mode=max
