@@ -3,7 +3,7 @@ variable "default_tags" {
 
     Environment = "Production"
     ManagedBy   = "terraform"
-    Project     = "learn-tfc-aws"
+    Project     = "teacherfox-prod"
 
   }
   description = "Default Tags for Auto Scaling Group"
@@ -40,12 +40,12 @@ module "iam" {
     environment = var.environment
 }
 
-module "s3" {
-  source = "../../modules/s3"
+module "graphql" {
+  source = "../../modules/graphql"
   environment = var.environment
 }
 
-module "graphql" {
-  source = "../../modules/graphql"
+module "route53" {
+  source = "../../modules/route53"
   environment = var.environment
 }

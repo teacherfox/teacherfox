@@ -1,6 +1,6 @@
 locals {
-  users          = ["giorgos"]
-  developers     = ["giorgos"]
+  users          = []
+  developers     = ["nikos"]
   administrators = ["giorgos"]
 }
 
@@ -51,7 +51,7 @@ resource "aws_iam_policy" "user_bare_policy" {
 }
 
 resource "aws_iam_user" "users" {
-  for_each      = toset(local.users)
+  for_each      = toset(concat(local.developers, local.administrators))
   name          = each.key
   force_destroy = true
 }
