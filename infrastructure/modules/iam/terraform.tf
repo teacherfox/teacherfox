@@ -25,12 +25,12 @@ data "aws_iam_policy_document" "terraform_assume_role_policy" {
     condition {
       test     = "StringEquals"
       values   = [local.terraform_audience]
-      variable = "${local.github_provider_url}:aud"
+      variable = "${local.terraform_provider_url}:aud"
     }
     condition {
       test     = "StringLike"
       values   = ["organization:${var.organization}:project:${var.project}:workspace:${var.workspace}:*"]
-      variable = "${local.github_provider_url}:sub"
+      variable = "${local.terraform_provider_url}:sub"
     }
   }
 }
@@ -40,7 +40,7 @@ data "external" "thumbprint" {
 }
 
 resource "aws_iam_openid_connect_provider" "terraform_openid_connect_provider" {
-  url = "https://${local.github_provider_url}"
+  url = "https://${local.terraform_provider_url}"
 
   client_id_list = [
     local.terraform_audience,
