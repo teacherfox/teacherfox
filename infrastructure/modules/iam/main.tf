@@ -45,6 +45,16 @@ resource "aws_iam_policy" "user_bare_policy" {
         Resource = [
           "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}"
         ]
+      },
+      {
+        Sid : "AdditionalIamMFAActions"
+        Effect : "Allow",
+        Action = [
+          "iam:ListVirtualMFADevices"
+        ]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/"
+        ]
       }
     ]
   })
