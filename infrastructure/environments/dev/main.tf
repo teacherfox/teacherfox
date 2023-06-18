@@ -2,8 +2,8 @@ variable "default_tags" {
   default = {
 
     Environment = "Development"
-    ManagedBy   = "terraform"
-    Project     = "teacherfox-dev"
+    ManagedBy   = "Terraform"
+    Project     = "Teacherfox"
 
   }
   description = "Default Tags for Auto Scaling Group"

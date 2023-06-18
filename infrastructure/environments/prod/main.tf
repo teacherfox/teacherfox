@@ -1,9 +1,14 @@
+locals {
+  organization = "teacherfox"
+  workspace    = "teacherfox-${var.environment}"
+}
+
 variable "default_tags" {
   default = {
 
     Environment = "Production"
-    ManagedBy   = "terraform"
-    Project     = "teacherfox-prod"
+    ManagedBy   = "Terraform"
+    Project     = "Teacherfox"
 
   }
   description = "Default Tags for Auto Scaling Group"
@@ -36,16 +41,19 @@ provider "aws" {
 }
 
 module "iam" {
-  source = "../../modules/iam"
-    environment = var.environment
+  source        = "../../modules/iam"
+  environment   = var.environment
+  ecr_repo_arns = [module.graphql.ecr_repo_arn]
+  organization  = local.organization
+  workspace     = local.workspace
 }
 
 module "graphql" {
-  source = "../../modules/graphql"
+  source      = "../../modules/graphql"
   environment = var.environment
 }
 
 module "route53" {
-  source = "../../modules/route53"
+  source      = "../../modules/route53"
   environment = var.environment
 }
