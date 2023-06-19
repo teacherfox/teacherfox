@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   watch: true,
   emitLegacyCommonJSImports: false,
   generates: {
-    './src/generated/schema.graphql': {
+    './src/schema/generated/schema.graphql': {
       plugins: ['schema-ast'],
     },
   },
