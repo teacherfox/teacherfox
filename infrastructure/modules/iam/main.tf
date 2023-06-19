@@ -208,7 +208,7 @@ resource "aws_iam_user_group_membership" "developers_membership" {
 }
 
 resource "aws_iam_role" "administrator_role" {
-  name        = "adminstrator"
+  name        = "admin"
   description = "Administrator access to all services"
 
   managed_policy_arns  = ["arn:aws:iam::aws:policy/AdministratorAccess"]
