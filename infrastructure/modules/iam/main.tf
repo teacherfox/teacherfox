@@ -160,7 +160,7 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
 }
 
 resource "aws_iam_policy" "developer_policy" {
-  name        = "UserBare"
+  name        = "ReadToUseServices"
   path        = "/"
   description = "Minimum rights for any user, to force picking roles"
 
