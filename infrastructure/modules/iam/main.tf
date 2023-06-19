@@ -20,6 +20,15 @@ resource "aws_iam_policy" "user_bare_policy" {
         Sid : "IamUserActions"
         Effect : "Allow",
         Action = [
+          "iam:GetAccountPasswordPolicy",
+          "iam:ListVirtualMFADevices"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid : "IamUserActions"
+        Effect : "Allow",
+        Action = [
           "iam:GenerateServiceLastAccessedDetails",
           "iam:GenerateCredentialReport",
           "iam:Get*",
@@ -51,7 +60,7 @@ resource "aws_iam_policy" "user_bare_policy" {
           "iam:DeactivateMFADevice",
           "iam:EnableMFADevice",
           "iam:DeleteVirtualMFADevice",
-          "iam:ResyncMFADevice",
+          "iam:ResyncMFADevice"
         ]
         Resource = [
           "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}"
