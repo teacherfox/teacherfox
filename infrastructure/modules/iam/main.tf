@@ -159,7 +159,7 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
   }
 }
 
-resource "aws_iam_policy" "read_policy" {
+resource "aws_iam_policy" "developer_policy" {
   name        = "UserBare"
   path        = "/"
   description = "Minimum rights for any user, to force picking roles"
@@ -170,11 +170,22 @@ resource "aws_iam_policy" "read_policy" {
     Version   = "2012-10-17"
     Statement = [
       {
-        Sid : "AllowReadAccessToAll"
+        Sid : "AllowViewAccountInfo"
         Effect : "Allow",
         Action = [
-          "*:List*",
-          "*:Get*"
+          "iam:ListAccountAliases"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid : "AllowReadAccessToUsingServices"
+        Effect : "Allow",
+        Action = [
+          "ecr:List*",
+          "ecr:Get*",
+          "ecr:BatchGet*",
+          "ecr:BatchCheck*",
+          "ecr:Describe*"
         ]
         Resource = "*"
       },
@@ -189,9 +200,9 @@ resource "aws_iam_role" "developer_role" {
   assume_role_policy   = data.aws_iam_policy_document.instance_assume_role_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "developer_read_policy_attach" {
+resource "aws_iam_role_policy_attachment" "developer_policy_attach" {
   role       = aws_iam_role.developer_role.name
-  policy_arn = aws_iam_policy.read_policy.arn
+  policy_arn = aws_iam_policy.developer_policy.arn
 }
 
 resource "aws_iam_policy" "developer_assume_policy" {
