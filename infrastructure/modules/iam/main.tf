@@ -1,6 +1,6 @@
 locals {
   users          = []
-  developers     = ["nikos"]
+  developers     = ["nikos", "giorgos"]
   administrators = ["giorgos"]
 }
 
@@ -11,8 +11,6 @@ resource "aws_iam_policy" "user_bare_policy" {
   path        = "/"
   description = "Minimum rights for any user, to force picking roles"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [
@@ -162,10 +160,8 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
 resource "aws_iam_policy" "developer_policy" {
   name        = "ReadToUseServices"
   path        = "/"
-  description = "Minimum rights for any user, to force picking roles"
+  description = "Read access in all services that we use"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [
