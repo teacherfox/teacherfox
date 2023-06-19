@@ -13,11 +13,15 @@
     "lint:fix": "eslint . --fix",
     "update": "pnpm update --latest && pnpm install && pnpm generate",
     "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "codegen": "graphql-codegen-esm --config src/schema/codegen.ts"
   },
   "author": "",
   "license": "UNLICENCED",
   "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.0",
     "@prisma/client": "^4.15.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "9.0.2",

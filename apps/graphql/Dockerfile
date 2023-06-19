@@ -14,6 +14,7 @@ RUN turbo prune --scope=graphql --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:lts-alpine AS installer
 RUN apk add --no-cache libc6-compat
+RUN apk --no-cache add --virtual .builds-deps build-base python3
 RUN apk update
 WORKDIR /app
 RUN yarn global add pnpm

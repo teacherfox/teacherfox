@@ -103,6 +103,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/logger
     devDependencies:
+      '@babel/core':
+        specifier: ^7.22.5
+        version: 7.22.5
+      '@graphql-codegen/cli':
+        specifier: ^4.0.1
+        version: 4.0.1(@babel/core@7.22.5)(@types/node@20.3.1)(graphql@16.6.0)
+      '@graphql-codegen/client-preset':
+        specifier: ^4.0.0
+        version: 4.0.0(graphql@16.6.0)
       '@prisma/client':
         specifier: ^4.15.0
         version: 4.15.0(prisma@4.15.0)
@@ -1607,7 +1616,7 @@ packages:
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
-      '@jridgewell/sourcemap-codec': 1.4.14
+      '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
   /@next/env@13.4.5:
