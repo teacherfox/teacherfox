@@ -20,33 +20,59 @@ resource "aws_iam_policy" "user_bare_policy" {
         Sid : "AllowViewAccountInfo"
         Effect : "Allow",
         Action = [
-          "iam:GetAccountPasswordPolicy",
-          "iam:GetAccountSummary",
-          "iam:ListAccountAliases",
-          "iam:ListVirtualMFADevices"
+          "iam:ChangePassword",
+          "iam:GetUser"
         ]
         Resource = "*"
       },
       {
-        Sid : "IamUserActions"
+        Sid : "AllowManageOwnAccessKeys"
         Effect : "Allow",
         Action = [
-          "iam:GenerateServiceLastAccessedDetails",
-          "iam:GenerateCredentialReport",
-          "iam:Get*",
-          "iam:List*",
           "iam:CreateAccessKey",
-          "iam:UpdateAccessKey",
           "iam:DeleteAccessKey",
-          "iam:ChangePassword",
+          "iam:ListAccessKeys",
+          "iam:UpdateAccessKey",
+          "iam:GetAccessKeyLastUsed"
+        ]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}",
+        ]
+      },
+      {
+        Sid : "AllowManageOwnSigningCertificates"
+        Effect : "Allow",
+        Action = [
           "iam:DeleteSigningCertificate",
+          "iam:ListSigningCertificates",
           "iam:UpdateSigningCertificate",
-          "iam:UploadSigningCertificate",
+          "iam:UploadSigningCertificate"
+        ]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}",
+        ]
+      },
+      {
+        Sid : "AllowManageOwnSSHPublicKeys"
+        Effect : "Allow",
+        Action = [
           "iam:DeleteSSHPublicKey",
+          "iam:GetSSHPublicKey",
+          "iam:ListSSHPublicKeys",
           "iam:UpdateSSHPublicKey",
-          "iam:UploadSSHPublicKey",
+          "iam:UploadSSHPublicKey"
+        ]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}",
+        ]
+      },
+      {
+        Sid : "AllowManageOwnGitCredentials"
+        Effect : "Allow",
+        Action = [
           "iam:CreateServiceSpecificCredential",
           "iam:DeleteServiceSpecificCredential",
+          "iam:ListServiceSpecificCredentials",
           "iam:ResetServiceSpecificCredential",
           "iam:UpdateServiceSpecificCredential"
         ]
@@ -55,12 +81,12 @@ resource "aws_iam_policy" "user_bare_policy" {
         ]
       },
       {
-        Sid : "IamMFAActions"
+        Sid : "AllowManageOwnUserMFA"
         Effect : "Allow",
         Action = [
-          "iam:CreateVirtualMFADevice",
           "iam:DeactivateMFADevice",
           "iam:EnableMFADevice",
+          "iam:ListMFADevices",
           "iam:DeleteVirtualMFADevice",
           "iam:ResyncMFADevice"
         ]
@@ -72,6 +98,7 @@ resource "aws_iam_policy" "user_bare_policy" {
         Sid : "AllowManageOwnVirtualMFADevice"
         Effect : "Allow",
         Action = [
+          "iam:CreateVirtualMFADevice",
           "iam:DeleteVirtualMFADevice"
         ]
         Resource = [
