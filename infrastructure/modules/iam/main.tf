@@ -159,13 +159,39 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
   }
 }
 
+resource "aws_iam_policy" "read_policy" {
+  name        = "UserBare"
+  path        = "/"
+  description = "Minimum rights for any user, to force picking roles"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Sid : "AllowReadAccessToAll"
+        Effect : "Allow",
+        Action = [
+          "*:List*",
+          "*:Get*"
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
 resource "aws_iam_role" "developer_role" {
   name        = "developer"
   description = "View access in all services, write access in non production services"
-
-  managed_policy_arns  = ["arn:aws:iam::aws:policy/PowerUserAccess"]
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.instance_assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "developer_read_policy_attach" {
+  role       = aws_iam_role.developer_role.name
+  policy_arn = aws_iam_policy.read_policy.arn
 }
 
 resource "aws_iam_policy" "developer_assume_policy" {
