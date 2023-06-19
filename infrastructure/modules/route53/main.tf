@@ -15,6 +15,15 @@ resource "aws_route53_record" "zoho_verification" {
   records = ["zoho-verification=zb82681392.zmverify.zoho.eu", "v=spf1 include:zoho.eu ~all"]
 }
 
+resource "aws_route53_record" "github_verification" {
+  count   = var.environment == "prod" ? 1 : 0
+  zone_id = aws_route53_zone.teacherfox.zone_id
+  name    = "_github-challenge-teacherfox-org"
+  type    = "TXT"
+  ttl     = "86400"
+  records = ["c2ae539364"]
+}
+
 resource "aws_route53_record" "dkim" {
   count   = var.environment == "prod" ? 1 : 0
   zone_id = aws_route53_zone.teacherfox.zone_id
