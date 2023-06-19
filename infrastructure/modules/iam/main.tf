@@ -26,7 +26,18 @@ resource "aws_iam_policy" "user_bare_policy" {
           "iam:List*",
           "iam:CreateAccessKey",
           "iam:UpdateAccessKey",
-          "iam:DeleteAccessKey"
+          "iam:DeleteAccessKey",
+          "iam:ChangePassword",
+          "iam:DeleteSigningCertificate",
+          "iam:UpdateSigningCertificate",
+          "iam:UploadSigningCertificate",
+          "iam:DeleteSSHPublicKey",
+          "iam:UpdateSSHPublicKey",
+          "iam:UploadSSHPublicKey",
+          "iam:CreateServiceSpecificCredential",
+          "iam:DeleteServiceSpecificCredential",
+          "iam:ResetServiceSpecificCredential",
+          "iam:UpdateServiceSpecificCredential"
         ]
         Resource = [
           "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}",
@@ -38,8 +49,8 @@ resource "aws_iam_policy" "user_bare_policy" {
         Action = [
           "iam:CreateVirtualMFADevice",
           "iam:DeactivateMFADevice",
-          "iam:DeleteVirtualMFADevice",
           "iam:EnableMFADevice",
+          "iam:DeleteVirtualMFADevice",
           "iam:ResyncMFADevice",
         ]
         Resource = [
@@ -47,14 +58,34 @@ resource "aws_iam_policy" "user_bare_policy" {
         ]
       },
       {
-        Sid : "AdditionalIamMFAActions"
+        Sid : "AllowManageOwnVirtualMFADevice"
         Effect : "Allow",
         Action = [
-          "iam:ListVirtualMFADevices"
+          "iam:DeleteVirtualMFADevice"
         ]
         Resource = [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/"
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*"
         ]
+      },
+      {
+        Sid : "DenyAllExceptListedIfNoMFA"
+        Effect : "Deny",
+        NotAction = [
+          "iam:CreateVirtualMFADevice",
+          "iam:EnableMFADevice",
+          "iam:GetUser",
+          "iam:ListMFADevices",
+          "iam:ListVirtualMFADevices",
+          "iam:ResyncMFADevice",
+          "iam:DeleteVirtualMFADevice",
+          "sts:GetSessionToken"
+        ]
+        Resource = "*",
+        Condition = {
+          BoolIfExists : {
+            "aws:MultiFactorAuthPresent" : "false"
+          }
+        }
       }
     ]
   })
