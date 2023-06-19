@@ -21,6 +21,8 @@ resource "aws_iam_policy" "user_bare_policy" {
         Effect : "Allow",
         Action = [
           "iam:GetAccountPasswordPolicy",
+          "iam:GetAccountSummary",
+          "iam:ListAccountAliases",
           "iam:ListVirtualMFADevices"
         ]
         Resource = "*"
