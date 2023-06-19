@@ -17,7 +17,7 @@ resource "aws_iam_policy" "user_bare_policy" {
     Version   = "2012-10-17"
     Statement = [
       {
-        Sid : "IamUserActions"
+        Sid : "AllowViewAccountInfo"
         Effect : "Allow",
         Action = [
           "iam:GetAccountPasswordPolicy",
