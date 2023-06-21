@@ -3,7 +3,6 @@ locals {
     "ecr:BatchGetImage",
     "ecr:BatchCheckLayerAvailability",
     "ecr:CompleteLayerUpload",
-    "ecr:GetAuthorizationToken",
     "ecr:GetDownloadUrlForLayer",
     "ecr:InitiateLayerUpload",
     "ecr:GetDownloadUrlForLayer",
@@ -58,6 +57,12 @@ data "aws_iam_policy_document" "server_deploy" {
     actions   = local.ecr_actions
     effect    = "Allow"
     resources = var.ecr_repo_arns
+  }
+
+  statement {
+    actions   = ["ecr:GetAuthorizationToken"]
+    effect    = "Allow"
+    resources = ["*"]
   }
 
 #  dynamic "statement" {
