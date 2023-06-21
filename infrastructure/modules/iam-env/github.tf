@@ -3,6 +3,7 @@ locals {
     "ecr:BatchGetImage",
     "ecr:BatchCheckLayerAvailability",
     "ecr:CompleteLayerUpload",
+    "ecr:GetAuthorizationToken",
     "ecr:GetDownloadUrlForLayer",
     "ecr:InitiateLayerUpload",
     "ecr:GetDownloadUrlForLayer",

@@ -10,10 +10,11 @@ resource "aws_iam_role" "terraform_role" {
 
   managed_policy_arns  = ["arn:aws:iam::aws:policy/AdministratorAccess"]
   max_session_duration = 43200
-  assume_role_policy   = data.aws_iam_policy_document.terraform_assume_role_policy.json
+  assume_role_policy   = data.aws_iam_policy_document.terraform_assume_role_policy[each.key].json
 }
 
 data "aws_iam_policy_document" "terraform_assume_role_policy" {
+  for_each = var.environments
   version = "2012-10-17"
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -30,7 +31,7 @@ data "aws_iam_policy_document" "terraform_assume_role_policy" {
     }
     condition {
       test     = "StringLike"
-      values   = ["organization:${var.organization}:project:${var.project}:workspace:${var.workspace}:*"]
+      values   = ["organization:${var.organization}:project:${var.project}:workspace:${var.organization}-${each.key}:*"]
       variable = "${local.terraform_provider_url}:sub"
     }
   }
