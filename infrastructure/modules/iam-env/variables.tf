@@ -1,5 +1,9 @@
-variable "environments" {
-  type = set(string)
+variable "environment" {
+  type = string
+}
+
+variable "ecr_repo_arns" {
+  type = list(string)
 }
 
 variable "organization" {
