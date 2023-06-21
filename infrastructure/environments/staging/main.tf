@@ -44,8 +44,6 @@ module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
   ecr_repo_arns = [module.graphql.ecr_repo_arn]
-  organization  = local.organization
-  workspace     = local.workspace
 }
 
 module "graphql" {
