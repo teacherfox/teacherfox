@@ -4,8 +4,9 @@ locals {
 }
 
 resource "aws_iam_role" "terraform_role" {
-  name        = "${var.environment}-terraform"
-  description = "Terraform role for managing ${var.environment} resources"
+  for_each    = var.environments
+  name        = "${each.key}-terraform"
+  description = "Terraform role for managing ${each.key} resources"
 
   managed_policy_arns  = ["arn:aws:iam::aws:policy/AdministratorAccess"]
   max_session_duration = 43200

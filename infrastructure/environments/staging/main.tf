@@ -6,7 +6,7 @@ locals {
 variable "default_tags" {
   default = {
 
-    Environment = "Production"
+    Environment = "Staging"
     ManagedBy   = "Terraform"
     Project     = "Teacherfox"
 
@@ -19,7 +19,7 @@ terraform {
   cloud {
     organization = "teacherfox"
     workspaces {
-      name = "teacherfox-prod"
+      name = "teacherfox-staging"
     }
   }
 
@@ -38,13 +38,6 @@ provider "aws" {
   default_tags {
     tags = var.default_tags
   }
-}
-
-module "iam" {
-  source        = "../../modules/iam"
-  environments   = [var.environment, "dev", "staging"]
-  organization  = local.organization
-  workspace     = local.workspace
 }
 
 module "iam_env" {
