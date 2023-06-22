@@ -42,5 +42,5 @@ provider "aws" {
 
 data "tfe_outputs" "prod_outputs" {
   organization = local.organization
-  workspace = local.workspace
+  workspace = "${local.organization}-prod"
 }
