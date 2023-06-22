@@ -1,9 +1,24 @@
 locals {
-  domain = "teacherfox.com.cy"
+  workspace = "${var.organization}-${var.environment}"
+  domain = "${var.organization}.com.cy"
 }
 
 resource "aws_route53_zone" "teacherfox" {
   name         = var.environment == "prod" ? local.domain : "${var.environment}.${local.domain}"
+}
+
+data "tfe_outputs" "prod_outputs" {
+  organization = var.organization
+  workspace = local.workspace
+}
+
+resource "aws_route53_record" "nameservers_to_parent" {
+  count   = var.environment == "prod" ? 0 : 1
+  zone_id = data.tfe_outputs.prod_outputs.values.zone_id
+  name    = var.environment
+  type    = "NS"
+  ttl     = "86400"
+  records = aws_route53_zone.teacherfox.name_servers
 }
 
 resource "aws_route53_record" "zoho_verification" {

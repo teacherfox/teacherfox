@@ -1,3 +1,8 @@
+locals {
+  organization = "teacherfox"
+  workspace    = "${local.organization}-${var.environment}"
+}
+
 variable "default_tags" {
   default = {
 
@@ -36,6 +41,6 @@ provider "aws" {
 }
 
 data "tfe_outputs" "prod_outputs" {
-  organization = "teacherfox"
-  workspace = "teacherfox-dev"
+  organization = local.organization
+  workspace = local.workspace
 }
