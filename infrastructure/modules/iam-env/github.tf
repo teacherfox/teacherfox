@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
     }
     condition {
       test     = "StringLike"
-      values   = ["repo:teacherfox/teacherfox:*"]
+      values   = ["repo:${var.organization}/${var.organization}:*"]
       variable = "${local.github_provider_url}:sub"
     }
   }

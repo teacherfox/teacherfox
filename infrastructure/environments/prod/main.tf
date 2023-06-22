@@ -1,6 +1,6 @@
 locals {
   organization = "teacherfox"
-  workspace    = "teacherfox-${var.environment}"
+  workspace    = "${local.organization}-${var.environment}"
 }
 
 variable "default_tags" {
@@ -50,6 +50,7 @@ module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
   ecr_repo_arns = [module.graphql.ecr_repo_arn]
+  organization  = local.organization
 }
 
 module "graphql" {
@@ -60,6 +61,7 @@ module "graphql" {
 module "route53" {
   source      = "../../modules/route53"
   environment = var.environment
+  organization = local.organization
 }
 
 module "vpc" {
