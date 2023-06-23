@@ -1,0 +1,39 @@
+---
+  - include_vars: users.yml
+
+  - name: Create users with home directory
+    user:
+      name: "{{ item.username }}"
+      shell: "{{'/bin/bash' if item.system != 'yes' else '/bin/false'}}"
+      createhome: "{{'yes' if item.system != 'yes' else 'no'}}"
+      comment: Created by Ansible
+      state: present
+    with_items: "{{users}}"
+
+  - name: "Remove old user accounts in remove_users"
+    user:
+      name: "{{ item }}"
+      state: absent
+    with_items: "{{ remove_users }}"
+
+  - name: Setup | authorized key upload
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ lookup('file', 'files/{{ item.username }}.pub') }}"
+    with_items: "{{users}}"
+
+  - name: Sudoers | update sudoers file and validate
+    lineinfile: "dest=/etc/sudoers
+      insertafter=EOF
+      line='{{ item.username }} ALL=(ALL) NOPASSWD: ALL'
+      regexp='^{{ item.username }} .*'
+      state=present"
+    when: '{{ item.use_sudo }} == True'
+    with_items: "{{users}}"
+
+  - name: Disable root login via SSH
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^PermitRootLogin"
+      line: PermitRootLogin no
+    notify: Restart sshd

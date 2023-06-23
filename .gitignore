@@ -115,6 +115,3 @@ fabric.properties
 
 # Environment variables
 .env
-
-# Terraform
-infrastructure/**/.terraform/**

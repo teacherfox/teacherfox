@@ -9,7 +9,7 @@ resource "aws_route53_zone" "teacherfox" {
 
 data "tfe_outputs" "prod_outputs" {
   organization = var.organization
-  workspace = local.workspace
+  workspace = "${var.organization}-prod"
 }
 
 resource "aws_route53_record" "nameservers_to_parent" {
