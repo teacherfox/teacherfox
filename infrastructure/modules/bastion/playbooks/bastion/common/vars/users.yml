@@ -1,0 +1,8 @@
+---
+users:
+  - username: giorgos
+    use_sudo: yes
+    system: no
+
+remove_users:
+  - example

@@ -1,0 +1,71 @@
+---
+  - name: Update packages
+    apt:
+      update_cache: yes
+
+  - name: Upgrade packages
+    apt:
+      name: "*"
+      state: latest
+
+  - name: Install haproxy
+    apt:
+      name: haproxy
+      state: present
+
+  - name: Create SSL directories
+    file:
+      path: "{{ item }}"
+      state: directory
+    loop:
+      - /etc/ssl/crt
+      - /etc/ssl/csr
+      - /etc/ssl/private
+
+  # - name: Generate an OpenSSL private key
+  #   openssl_privatekey:
+  #     path: /etc/ssl/private/dripshop.live.key
+  #     type: RSA
+  #     size: 4096
+
+  # - name: Generate an OpenSSL dh params
+  #   openssl_dhparam:
+  #     path: /etc/ssl/dhparams.pem
+  #     size: 4096
+
+  # - name: Generate an OpenSSL Certificate Signing Request
+  #   openssl_csr:
+  #     path: /etc/ssl/csr/dripshop.live.csr
+  #     privatekey_path: /etc/ssl/private/dripshop.live.key
+  #     country_name: US
+  #     organization_name: Dripshop
+  #     email_address: matt@dripshop.live
+  #     common_name: dripshop.live
+
+  # - name: Generate a Self Signed OpenSSL certificate
+  #   openssl_certificate:
+  #     path: /etc/ssl/crt/dripshop.live.crt
+  #     privatekey_path: /etc/ssl/private/dripshop.live.key
+  #     csr_path: /etc/ssl/csr/dripshop.live.csr
+  #     provider: selfsigned
+
+  # - name: concat file
+  #   become: true
+  #   shell: "cat /etc/ssl/crt/dripshop.live.crt /etc/ssl/private/dripshop.live.key > /etc/ssl/dripshop.live.pem"
+
+  # - name: concat file
+  #   become: true
+  #   command: "chmod 777 /etc/ssl/dripshop.live.pem"
+
+  - name: Setup haproxy
+    template:
+      src: haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+      force: yes
+      mode: 777
+    register: haproxy_config
+
+  - name: Restart haproxy
+    service:
+      name: haproxy
+      state: "{{ 'restarted' if haproxy_config.changed else 'started' }}"
