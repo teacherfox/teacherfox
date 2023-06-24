@@ -84,7 +84,7 @@ module "bastion" {
   environment = var.environment
   base_tags = var.default_tags
   public_subnet_ids = module.vpc.public_subnet_ids
-  ssm_bucket = module.ssm.ssm_bucket_domain_name
+  ssm_bucket = module.ssm.ssm_bucket
   ssm_client_access_policy_arn = module.ssm.ssm_client_access_policy_arn
   ssm_client_security_group_id = module.ssm.ssm_client_security_group_id
   vpc_id = module.vpc.id

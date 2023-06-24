@@ -1,5 +1,5 @@
 locals {
-  bastion_ami_id = "ami-07b1ee62009c93962"
+  bastion_ami_id = "ami-0bcd6fc63cad19043"
 }
 
 data "aws_region" "current" {}
