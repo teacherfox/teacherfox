@@ -1,5 +1,5 @@
-output "ssm_bucket_domain_name" {
-  value = aws_s3_bucket.ssm.bucket_domain_name
+output "ssm_bucket" {
+  value = aws_s3_bucket.ssm.id
 }
 
 output "ssm_client_access_policy_arn" {
