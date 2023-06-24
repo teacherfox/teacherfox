@@ -1,5 +1,49 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Next.js",
   "extends": "tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/api/*": ["./src/api/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/common/*": ["./src/components/common/*"],
+      "@/elements/*": ["./src/components/elements/*"],
+      "@/configs/*": ["./src/configs/*"],
+      "@/pages/*": ["./src/pages/*"],
+      "@/views/*": ["./src/views/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/components/common/styles/footer.tsx",
+    "src/configs/theme.ts",
+    "src/components/common/Navbar2.hs",
+    "src/components/elements/TFButton.js",
+    "src/components/elements/TFButton.js"
+  ],
   "exclude": ["node_modules"]
 }
