@@ -108,7 +108,7 @@ resource "aws_security_group_rule" "bastion_egress" {
 resource "aws_launch_template" "bastion" {
   name                   = "${var.environment}-bastion"
   image_id               = local.bastion_ami_id
-  instance_type          = var.environment == "production" ? "t4g.small" : var.environment == "staging" ? "t4g.small" : "t4g.nano"
+  instance_type          = "t4g.nano"
   vpc_security_group_ids = [aws_security_group.bastion.id, var.ssm_client_security_group_id]
 
   iam_instance_profile {
