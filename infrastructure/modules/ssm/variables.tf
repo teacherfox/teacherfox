@@ -13,3 +13,7 @@ variable "private_subnet_ids" {
 variable "endpoint_interface_id" {
   type = string
 }
+
+variable "organization" {
+  type = string
+}
