@@ -42,7 +42,7 @@ resource "aws_rds_cluster" "this" {
   engine_version                      = data.aws_rds_engine_version.postgresql.version
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   manage_master_user_password         = true
-  master_username                     = "${var.environment}-${var.service}"
+  master_username                     = replace("${var.environment}-${var.service}", "-", "_")
   port                                = local.port
   preferred_maintenance_window        = local.preferred_maintenance_window
   replication_source_identifier       = var.replication_source_identifier
