@@ -13,3 +13,7 @@ output "id" {
 output "endpoint_interface_id" {
   value = aws_security_group.endpoint_interface.id
 }
+
+output "database_subnet_ids" {
+  value = aws_subnet.database.*.id
+}

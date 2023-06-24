@@ -89,3 +89,11 @@ module "bastion" {
   ssm_client_security_group_id = module.ssm.ssm_client_security_group_id
   vpc_id = module.vpc.id
 }
+
+module "server" {
+  source = "../../modules/server"
+  bastion_security_group_id = module.bastion.security_group_id
+  database_subnet_ids = module.vpc.database_subnet_ids
+  environment = var.environment
+  vpc_id = module.vpc.id
+}
