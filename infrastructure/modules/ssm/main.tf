@@ -2,7 +2,7 @@ data "aws_region" "current" {}
 
 # Set up bucket for configuration
 resource "aws_s3_bucket" "ssm" {
-  bucket = "${var.environment}-drip-ssm"
+  bucket = "${var.environment}-${var.organization}-ssm"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "ssm" {
@@ -15,7 +15,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "ssm" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "ssm_ownership_control" {
+  bucket = aws_s3_bucket.ssm.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_acl" "ssm" {
+  depends_on = [aws_s3_bucket_ownership_controls.ssm_ownership_control]
+
   bucket = aws_s3_bucket.ssm.id
   acl    = "private"
 }

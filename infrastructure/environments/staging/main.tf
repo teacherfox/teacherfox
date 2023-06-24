@@ -70,6 +70,7 @@ module "ssm" {
   vpc_id = module.vpc.id
   private_subnet_ids = module.vpc.private_subnet_ids
   endpoint_interface_id = module.vpc.endpoint_interface_id
+  organization = local.organization
 }
 
 module "bastion" {
