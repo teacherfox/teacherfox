@@ -26,7 +26,6 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 ################################################################################
 
 resource "aws_rds_cluster" "this" {
-  #  allocated_storage                   = local.is_prod ? 100 : 10
   allow_major_version_upgrade         = !local.is_prod
   apply_immediately                   = !local.is_prod
   #  availability_zones                  = local.availability_zones
@@ -53,7 +52,7 @@ resource "aws_rds_cluster" "this" {
   }
 
   storage_encrypted      = true
-  vpc_security_group_ids = [aws_security_group.service_database.id]
+  vpc_security_group_ids = [aws_security_group.database.id]
 
   timeouts {
     create = try(var.cluster_timeouts.create, null)
@@ -151,49 +150,49 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
 # Security Group
 ################################################################################
 
-resource "aws_security_group" "service_database" {
+resource "aws_security_group" "database" {
   name        = "${var.environment}-${var.service}-database"
   description = "database security group"
   vpc_id      = var.vpc_id
   tags        = { Name = "${var.environment}-${var.service}-database" }
 }
 
-resource "aws_security_group_rule" "service_database_bastion_ssh_ingress" {
+resource "aws_security_group_rule" "database_bastion_ssh_ingress" {
   type                     = "ingress"
   from_port                = 22
   to_port                  = 22
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_database.id
+  security_group_id        = aws_security_group.database.id
   source_security_group_id = var.bastion_security_group_id
 }
 
-resource "aws_security_group_rule" "service_database_bastion" {
+resource "aws_security_group_rule" "database_bastion" {
   for_each                 = toset(["ingress", "egress"])
   type                     = each.key
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_database.id
+  security_group_id        = aws_security_group.database.id
   source_security_group_id = var.bastion_security_group_id
 }
 
-resource "aws_security_group_rule" "service_database_internal" {
+resource "aws_security_group_rule" "database_internal" {
   for_each                 = toset(["ingress", "egress"])
   type                     = each.key
   from_port                = 0
   to_port                  = 65535
   protocol                 = "-1"
-  security_group_id        = aws_security_group.service_database.id
-  source_security_group_id = aws_security_group.service_database.id
+  security_group_id        = aws_security_group.database.id
+  source_security_group_id = aws_security_group.database.id
 }
 
-resource "aws_security_group_rule" "service_database_service" {
+resource "aws_security_group_rule" "database_service" {
   for_each                 = toset(["ingress", "egress"])
   type                     = each.key
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.service_database.id
+  security_group_id        = aws_security_group.database.id
   source_security_group_id = var.service_security_group_id
 }
 
