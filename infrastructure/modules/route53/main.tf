@@ -56,3 +56,9 @@ resource "aws_route53_record" "mail" {
   ttl     = "300"
   records = ["10 mx.zoho.eu.", "20 mx2.zoho.eu.", "50 mx2.zoho.eu."]
 }
+
+resource "aws_acm_certificate" "wildcard" {
+  domain_name               = local.domain
+  validation_method         = "DNS"
+  subject_alternative_names = ["*.${local.domain}"]
+}

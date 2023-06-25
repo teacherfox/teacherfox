@@ -44,12 +44,6 @@ variable "copy_tags_to_snapshot" {
   default     = null
 }
 
-variable "database_name" {
-  description = "Name for an automatically created database on cluster creation"
-  type        = string
-  default     = null
-}
-
 variable "db_cluster_instance_class" {
   description = "The compute and memory capacity of each DB instance in the Multi-AZ DB cluster, for example db.m6g.xlarge. Not all DB instance classes are available in all AWS Regions, or for all database engines"
   type        = string

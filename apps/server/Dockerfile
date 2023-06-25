@@ -9,7 +9,7 @@ RUN apk update
 WORKDIR /app
 RUN yarn global add turbo
 COPY . .
-RUN turbo prune --scope=graphql --docker
+RUN turbo prune --scope=server --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:lts-alpine AS installer
@@ -25,12 +25,12 @@ COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN pnpm install
 
 # Generate prisma client
-COPY ./apps/graphql/prisma/. ./apps/graphql/prisma/.
-RUN pnpm --filter=graphql generate
+COPY ./apps/server/prisma/. ./apps/server/prisma/.
+RUN pnpm --filter=server generate
 
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
-RUN pnpm turbo run build --filter=graphql...
+RUN pnpm turbo run build --filter=server...
 
 # Remove node_module and src folders
 RUN rm -rf node_modules && pnpm recursive exec -- rm -rf ./node_modules ./src
@@ -48,8 +48,8 @@ ENV DATABASE_URL="postgresql://postgres:postgre@host.docker.internal:5432/yoga-t
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 graphqljs
-USER graphqljs
+RUN adduser --system --uid 1001 serverjs
+USER serverjs
 COPY --from=stripper /app .
 
-CMD node --conditions=javascript apps/graphql/dist/index.js
+CMD node --conditions=javascript apps/server/dist/index.js
