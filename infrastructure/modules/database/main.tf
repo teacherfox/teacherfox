@@ -48,7 +48,7 @@ resource "aws_rds_cluster" "this" {
   replication_source_identifier       = var.replication_source_identifier
 
   serverlessv2_scaling_configuration {
-    max_capacity = local.is_prod ? 1.0 : 0.5
+    max_capacity = 1.0
     min_capacity = 0.5
   }
 
