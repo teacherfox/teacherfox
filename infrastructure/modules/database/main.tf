@@ -17,7 +17,7 @@ data "aws_rds_engine_version" "postgresql" {
 ################################################################################
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "${var.environment}-${var.service}-database2"
+  name       = "${var.environment}-${var.service}-database"
   subnet_ids = var.database_subnet_ids
 }
 
@@ -39,7 +39,7 @@ resource "aws_rds_cluster" "this" {
   engine                              = data.aws_rds_engine_version.postgresql.engine
   engine_mode                         = "provisioned"
   engine_version                      = data.aws_rds_engine_version.postgresql.version
-  final_snapshot_identifier           = local.is_prod ? "${local.name}-final" : null
+  final_snapshot_identifier           = "${local.name}-final"
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   manage_master_user_password         = true
   master_username                     = replace("${var.environment}-${var.service}", "-", "_")
@@ -153,7 +153,7 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
 ################################################################################
 
 resource "aws_security_group" "database" {
-  name        = "${var.environment}-${var.service}-database"
+  name        = "${var.environment}-${var.service}-database2"
   description = "database security group"
   vpc_id      = var.vpc_id
   tags        = { Name = "${var.environment}-${var.service}-database" }
