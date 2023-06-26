@@ -3,6 +3,11 @@ locals {
   workspace    = "${local.organization}-${var.environment}"
 }
 
+data "tfe_outputs" "prod_outputs" {
+  organization = local.organization
+  workspace = "${local.organization}-prod"
+}
+
 variable "default_tags" {
   default = {
 
@@ -43,13 +48,9 @@ provider "aws" {
 module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
-  ecr_repo_arns = [module.graphql.ecr_repo_arn]
+  ecr_repo_arns = [module.cluster.ecr_repo_arns]
   organization  = local.organization
-}
-
-module "graphql" {
-  source      = "../../modules/graphql"
-  environment = var.environment
+  github_openid_connect_provider_arn = data.tfe_outputs.prod_outputs.values.github_openid_connect_provider_arn
 }
 
 module "route53" {

@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github_openid_connect_provider.arn]
+      identifiers = [var.github_openid_connect_provider_arn]
     }
     condition {
       test     = "StringEquals"
@@ -40,16 +40,6 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
       variable = "${local.github_provider_url}:sub"
     }
   }
-}
-
-resource "aws_iam_openid_connect_provider" "github_openid_connect_provider" {
-  url = "https://${local.github_provider_url}"
-
-  client_id_list = [
-    local.github_audience,
-  ]
-
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
 
 data "aws_iam_policy_document" "server_deploy" {
@@ -96,12 +86,12 @@ data "aws_iam_policy_document" "server_deploy" {
 #  }
 }
 
-resource "aws_iam_policy" "server_deploy" {
+resource "aws_iam_policy" "service_deploy" {
   name   = "${var.environment}-server-deploy"
   policy = data.aws_iam_policy_document.server_deploy.json
 }
 
 resource "aws_iam_role_policy_attachment" "github_server_deploy" {
   role       = aws_iam_role.github_role.name
-  policy_arn = aws_iam_policy.server_deploy.arn
+  policy_arn = aws_iam_policy.service_deploy.arn
 }

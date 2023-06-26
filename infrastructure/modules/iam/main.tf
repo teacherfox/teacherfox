@@ -2,6 +2,8 @@ locals {
   users          = []
   developers     = ["nikos", "giorgos"]
   administrators = ["giorgos"]
+  github_provider_url = "token.actions.githubusercontent.com"
+  github_audience = "sts.amazonaws.com"
 }
 
 data "aws_caller_identity" "current" {}
@@ -286,4 +288,15 @@ resource "aws_iam_user_group_membership" "administrators_membership" {
     aws_iam_group.administrators_group.name,
   ]
   depends_on = [aws_iam_user.users]
+}
+
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url = "https://${local.github_provider_url}"
+
+  client_id_list = [
+    local.github_audience,
+  ]
+
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
