@@ -49,7 +49,7 @@ output "cluster_engine_version_actual" {
 # database_name is not set on `aws_rds_cluster` resource if it was not specified, so can't be used in output
 output "cluster_database_name" {
   description = "Name for an automatically created database on cluster creation"
-  value       = var.database_name
+  value       = aws_rds_cluster.this.database_name
 }
 
 output "cluster_port" {
@@ -77,6 +77,17 @@ output "cluster_master_user_secret_arn" {
 output "cluster_hosted_zone_id" {
   description = "The Route53 Hosted Zone ID of the endpoint"
   value       = try(aws_rds_cluster.this.hosted_zone_id, null)
+}
+
+output "cluster_url" {
+    description = "The connection url to connect to the cluster"
+    value       = aws_rds_cluster.this.endpoint
+}
+
+
+output "cluster_read_only_url" {
+  description = "The connection url to connect to the cluster"
+  value       = aws_rds_cluster.this.reader_endpoint
 }
 
 ################################################################################
@@ -123,4 +134,13 @@ output "enhanced_monitoring_iam_role_unique_id" {
 output "db_cluster_cloudwatch_log_groups" {
   description = "Map of CloudWatch log groups created and their attributes"
   value       = aws_cloudwatch_log_group.this
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+output "security_group_id" {
+  description = "The ID of the security group"
+  value       = aws_security_group.database.id
 }

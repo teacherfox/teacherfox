@@ -63,5 +63,5 @@ jobs:
           context: .
           file: ./apps/${{ inputs.service_name }}/Dockerfile
           platforms: linux/arm64
-          cache-from: type=registry,ref=ghcr.io/teacherfox/graphql:prod-cache
-          cache-to: type=registry,ref=ghcr.io/teacherfox/graphql:prod-cache,mode=max
+          cache-from: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache
+          cache-to: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache,mode=max

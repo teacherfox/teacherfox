@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy_graphql:
+  deploy_server:
     permissions:
       id-token: write
       contents: read
@@ -22,4 +22,4 @@ jobs:
     with:
       aws_region: ${{ vars.AWS_REGION }}
       environment: prod
-      service_name: graphql
+      service_name: server

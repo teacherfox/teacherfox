@@ -1,8 +1,8 @@
 {
-  "name": "graphql",
+  "name": "server",
   "version": "1.0.0",
   "private": true,
-  "description": "GraphQL Server",
+  "description": "Teacherfox Server",
   "main": "index.js",
   "type": "module",
   "scripts": {

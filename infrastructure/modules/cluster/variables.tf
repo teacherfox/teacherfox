@@ -13,3 +13,15 @@ variable "bastion_security_group_id" {
 variable "database_subnet_ids" {
   type = list(string)
 }
+
+variable "service_subnet_ids" {
+  type = list(string)
+}
+
+variable "certificate_arn" {
+  type = string
+}
+
+variable "lb_subnet_ids" {
+  type = list(string)
+}

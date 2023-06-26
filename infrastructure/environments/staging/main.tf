@@ -75,8 +75,8 @@ module "ssm" {
 
 module "bastion" {
   source = "../../modules/bastion"
-  environment = var.environment
   base_tags = var.default_tags
+  environment = var.environment
   public_subnet_ids = module.vpc.public_subnet_ids
   ssm_bucket = module.ssm.ssm_bucket
   ssm_client_access_policy_arn = module.ssm.ssm_client_access_policy_arn
@@ -84,10 +84,13 @@ module "bastion" {
   vpc_id = module.vpc.id
 }
 
-module "server" {
-  source = "../../modules/server"
-  bastion_security_group_id = module.bastion.security_group_id
-  database_subnet_ids = module.vpc.database_subnet_ids
-  environment = var.environment
-  vpc_id = module.vpc.id
-}
+#module "cluster" {
+#  source = "../../modules/cluster"
+#  bastion_security_group_id = module.bastion.security_group_id
+#  certificate_arn = module.route53.wildcard_certificate_arn
+#  database_subnet_ids = module.vpc.database_subnet_ids
+#  environment = var.environment
+#  service_subnet_ids = module.vpc.private_subnet_ids
+#  vpc_id = module.vpc.id
+#  lb_subnet_ids = module.vpc.public_subnet_ids
+#}
