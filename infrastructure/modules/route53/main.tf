@@ -1,10 +1,17 @@
 locals {
   workspace = "${var.organization}-${var.environment}"
-  domain = "${var.organization}.com.cy"
+  domain = var.environment == "prod" ? "${var.organization}.com.cy" : "${var.environment}.${var.organization}.com.cy"
 }
 
+resource "aws_acm_certificate" "wildcard" {
+  domain_name               = local.domain
+  validation_method         = "DNS"
+  subject_alternative_names = ["*.${local.domain}"]
+}
+
+
 resource "aws_route53_zone" "teacherfox" {
-  name         = var.environment == "prod" ? local.domain : "${var.environment}.${local.domain}"
+  name         = local.domain
 }
 
 data "tfe_outputs" "prod_outputs" {
@@ -28,6 +35,28 @@ resource "aws_route53_record" "zoho_verification" {
   type    = "TXT"
   ttl     = "86400"
   records = ["zoho-verification=zb82681392.zmverify.zoho.eu", "v=spf1 include:zoho.eu ~all"]
+}
+
+resource "aws_route53_record" "wildcard_records" {
+  for_each = {
+    for dvo in aws_acm_certificate.wildcard.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = aws_route53_zone.teacherfox.zone_id
+}
+
+resource "aws_acm_certificate_validation" "wildcard_validation" {
+  certificate_arn         = aws_acm_certificate.wildcard.arn
+  validation_record_fqdns = [for record in aws_route53_record.wildcard_records : record.fqdn]
 }
 
 resource "aws_route53_record" "github_verification" {
@@ -55,10 +84,4 @@ resource "aws_route53_record" "mail" {
   type    = "MX"
   ttl     = "300"
   records = ["10 mx.zoho.eu.", "20 mx2.zoho.eu.", "50 mx2.zoho.eu."]
-}
-
-resource "aws_acm_certificate" "wildcard" {
-  domain_name               = local.domain
-  validation_method         = "DNS"
-  subject_alternative_names = ["*.${local.domain}"]
 }
