@@ -101,8 +101,3 @@ module "cluster" {
   service_subnet_ids = module.vpc.private_subnet_ids
   vpc_id = module.vpc.id
 }
-
-import {
-  to = module.cluster.module.server.module.database.aws_db_subnet_group.db_subnet_group
-  id = "prod-server-database"
-}
