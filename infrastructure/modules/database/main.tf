@@ -39,6 +39,7 @@ resource "aws_rds_cluster" "this" {
   engine                              = data.aws_rds_engine_version.postgresql.engine
   engine_mode                         = "provisioned"
   engine_version                      = data.aws_rds_engine_version.postgresql.version
+  final_snapshot_identifier           = local.is_prod ? "${local.name}-final" : null
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
   manage_master_user_password         = true
   master_username                     = replace("${var.environment}-${var.service}", "-", "_")
@@ -51,6 +52,7 @@ resource "aws_rds_cluster" "this" {
     min_capacity = 0.5
   }
 
+  skip_final_snapshot    = local.is_prod ? true : false
   storage_encrypted      = true
   vpc_security_group_ids = [aws_security_group.database.id]
 
