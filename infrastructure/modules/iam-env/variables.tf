@@ -9,3 +9,7 @@ variable "ecr_repo_arns" {
 variable "organization" {
   type = string
 }
+
+variable "github_openid_connect_provider_arn" {
+  type = string
+}

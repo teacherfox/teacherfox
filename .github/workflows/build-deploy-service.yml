@@ -65,3 +65,37 @@ jobs:
           platforms: linux/arm64
           cache-from: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache
           cache-to: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache,mode=max
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
+      packages: write
+
+    needs:
+      - build
+
+    steps:
+      - name: Download server task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service_name }} \
+          --query taskDefinition | jq -r 'del(
+            .taskDefinitionArn,
+            .requiresAttributes,
+            .compatibilities,
+            .revision,
+            .status,
+            .registeredAt,
+            .registeredBy
+          )' > be_taskdef.json
+
+      - name: Update Amazon ECS task definition for server
+        id: task-def-server
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: be_taskdef.json
+          container-name: ${{ inputs.ecr_server_repository }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}

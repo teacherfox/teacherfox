@@ -49,13 +49,9 @@ module "iam" {
 module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
-  ecr_repo_arns = [module.graphql.ecr_repo_arn]
+  ecr_repo_arns = [module.cluster.ecr_repo_arns]
+  github_openid_connect_provider_arn = module.iam.github_openid_connect_provider_arn
   organization  = local.organization
-}
-
-module "graphql" {
-  source      = "../../modules/graphql"
-  environment = var.environment
 }
 
 module "route53" {
