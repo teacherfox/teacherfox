@@ -17,6 +17,7 @@ module "server" {
   bastion_security_group_id = var.bastion_security_group_id
   certificate_arn = var.certificate_arn
   cluster_id = aws_ecs_cluster.teacherfox.id
+  cluster_name = aws_ecs_cluster.teacherfox.name
   database_subnet_ids = var.database_subnet_ids
   environment = var.environment
   lb_subnet_ids = var.lb_subnet_ids

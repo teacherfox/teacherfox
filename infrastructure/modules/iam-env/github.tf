@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
   }
 }
 
-data "aws_iam_policy_document" "server_deploy" {
+data "aws_iam_policy_document" "services_deploy" {
   statement {
     actions   = local.ecr_actions
     effect    = "Allow"
@@ -53,6 +53,12 @@ data "aws_iam_policy_document" "server_deploy" {
     actions   = ["ecr:GetAuthorizationToken"]
     effect    = "Allow"
     resources = ["*"]
+  }
+
+  statement {
+    actions   = ["iam:PassRole", "ecs:DeployService", "ecs:DescribeServices", "ecs:UpdateService"]
+    effect    = "Allow"
+    resources = var.ecs_service_arns
   }
 
 #  dynamic "statement" {
@@ -88,7 +94,7 @@ data "aws_iam_policy_document" "server_deploy" {
 
 resource "aws_iam_policy" "service_deploy" {
   name   = "${var.environment}-server-deploy"
-  policy = data.aws_iam_policy_document.server_deploy.json
+  policy = data.aws_iam_policy_document.services_deploy.json
 }
 
 resource "aws_iam_role_policy_attachment" "github_server_deploy" {

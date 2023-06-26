@@ -33,3 +33,7 @@ variable "cluster_id" {
 variable "certificate_arn" {
   type = string
 }
+
+variable "cluster_name" {
+  type = string
+}

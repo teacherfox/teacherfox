@@ -5,6 +5,7 @@ locals {
 }
 
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 resource "aws_security_group" "service_security_group" {
   name   = local.name
