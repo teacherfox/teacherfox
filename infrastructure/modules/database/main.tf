@@ -16,8 +16,8 @@ data "aws_rds_engine_version" "postgresql" {
 # DB Subnet Group
 ################################################################################
 
-resource "aws_db_subnet_group" "db_subnet_group2" {
-  name       = "${var.environment}-${var.service}-database"
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name       = "${var.environment}-${var.service}-database2"
   subnet_ids = var.database_subnet_ids
 }
 
@@ -33,7 +33,7 @@ resource "aws_rds_cluster" "this" {
   backup_retention_period             = 30
   database_name                       = replace(local.name, "-", "_")
   #  db_cluster_instance_class           = var.db_cluster_instance_class
-  db_subnet_group_name                = aws_db_subnet_group.db_subnet_group2.name
+  db_subnet_group_name                = aws_db_subnet_group.db_subnet_group.name
   deletion_protection                 = local.is_prod
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   engine                              = data.aws_rds_engine_version.postgresql.engine
@@ -52,7 +52,7 @@ resource "aws_rds_cluster" "this" {
     min_capacity = 0.5
   }
 
-  skip_final_snapshot    = local.is_prod ? true : false
+  skip_final_snapshot    = local.is_prod ? false : true
   storage_encrypted      = true
   vpc_security_group_ids = [aws_security_group.database.id]
 
@@ -85,7 +85,7 @@ resource "aws_rds_cluster_instance" "this" {
 
   apply_immediately            = !local.is_prod
   cluster_identifier           = aws_rds_cluster.this.id
-  db_subnet_group_name         = aws_db_subnet_group.db_subnet_group2.name
+  db_subnet_group_name         = aws_db_subnet_group.db_subnet_group.name
   engine                       = data.aws_rds_engine_version.postgresql.engine
   engine_version               = data.aws_rds_engine_version.postgresql.version
   identifier                   = "${local.name}-${each.key}"
