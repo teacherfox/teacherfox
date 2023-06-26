@@ -153,7 +153,7 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
 ################################################################################
 
 resource "aws_security_group" "database" {
-  name        = "${var.environment}-${var.service}-database2"
+  name        = "${var.environment}-${var.service}-database"
   description = "database security group"
   vpc_id      = var.vpc_id
   tags        = { Name = "${var.environment}-${var.service}-database" }
