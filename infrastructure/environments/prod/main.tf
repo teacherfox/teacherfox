@@ -96,7 +96,8 @@ module "cluster" {
   certificate_arn = module.route53.wildcard_certificate_arn
   database_subnet_ids = module.vpc.database_subnet_ids
   environment = var.environment
+  lb_subnet_ids = module.vpc.public_subnet_ids
+  organization = local.organization
   service_subnet_ids = module.vpc.private_subnet_ids
   vpc_id = module.vpc.id
-  lb_subnet_ids = module.vpc.public_subnet_ids
 }
