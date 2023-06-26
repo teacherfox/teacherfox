@@ -52,7 +52,7 @@ resource "aws_rds_cluster" "this" {
     min_capacity = 0.5
   }
 
-  skip_final_snapshot    = local.is_prod ? false : true
+  skip_final_snapshot    = true
   storage_encrypted      = true
   vpc_security_group_ids = [aws_security_group.database.id]
 
