@@ -48,7 +48,8 @@ provider "aws" {
 module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
-  ecr_repo_arns = [module.cluster.ecr_repo_arns]
+  ecr_repo_arns = module.cluster.ecr_repo_arns
+  ecs_service_arns = module.cluster.ecs_service_arns
   organization  = local.organization
   github_openid_connect_provider_arn = data.tfe_outputs.prod_outputs.values.github_openid_connect_provider_arn
 }

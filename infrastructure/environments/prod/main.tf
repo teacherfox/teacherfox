@@ -49,7 +49,8 @@ module "iam" {
 module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
-  ecr_repo_arns = [module.cluster.ecr_repo_arns]
+  ecr_repo_arns = module.cluster.ecr_repo_arns
+  ecs_service_arns = module.cluster.ecs_service_arns
   github_openid_connect_provider_arn = module.iam.github_openid_connect_provider_arn
   organization  = local.organization
 }
