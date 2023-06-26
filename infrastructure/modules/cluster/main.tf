@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "teacherfox" {
-  name = var.environment == "staging" ? "DRIPSHOP-STG" : "${var.environment}-drip"
+  name = "${var.environment}-${var.organization}"
 
   setting {
     name  = "containerInsights"

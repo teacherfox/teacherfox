@@ -24,7 +24,7 @@
 
   # - name: Generate an OpenSSL private key
   #   openssl_privatekey:
-  #     path: /etc/ssl/private/dripshop.live.key
+  #     path: /etc/ssl/private/teacherfox.live.key
   #     type: RSA
   #     size: 4096
 
@@ -35,27 +35,27 @@
 
   # - name: Generate an OpenSSL Certificate Signing Request
   #   openssl_csr:
-  #     path: /etc/ssl/csr/dripshop.live.csr
-  #     privatekey_path: /etc/ssl/private/dripshop.live.key
+  #     path: /etc/ssl/csr/teacherfox.live.csr
+  #     privatekey_path: /etc/ssl/private/teacherfox.live.key
   #     country_name: US
-  #     organization_name: Dripshop
-  #     email_address: matt@dripshop.live
-  #     common_name: dripshop.live
+  #     organization_name: teacherfox
+  #     email_address: matt@teacherfox.live
+  #     common_name: teacherfox.live
 
   # - name: Generate a Self Signed OpenSSL certificate
   #   openssl_certificate:
-  #     path: /etc/ssl/crt/dripshop.live.crt
-  #     privatekey_path: /etc/ssl/private/dripshop.live.key
-  #     csr_path: /etc/ssl/csr/dripshop.live.csr
+  #     path: /etc/ssl/crt/teacherfox.live.crt
+  #     privatekey_path: /etc/ssl/private/teacherfox.live.key
+  #     csr_path: /etc/ssl/csr/teacherfox.live.csr
   #     provider: selfsigned
 
   # - name: concat file
   #   become: true
-  #   shell: "cat /etc/ssl/crt/dripshop.live.crt /etc/ssl/private/dripshop.live.key > /etc/ssl/dripshop.live.pem"
+  #   shell: "cat /etc/ssl/crt/teacherfox.live.crt /etc/ssl/private/teacherfox.live.key > /etc/ssl/teacherfox.live.pem"
 
   # - name: concat file
   #   become: true
-  #   command: "chmod 777 /etc/ssl/dripshop.live.pem"
+  #   command: "chmod 777 /etc/ssl/teacherfox.live.pem"
 
   - name: Setup haproxy
     template:

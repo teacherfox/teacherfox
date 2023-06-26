@@ -25,3 +25,7 @@ variable "certificate_arn" {
 variable "lb_subnet_ids" {
   type = list(string)
 }
+
+variable "organization" {
+  type = string
+}
