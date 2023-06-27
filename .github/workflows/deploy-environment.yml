@@ -23,3 +23,4 @@ jobs:
       aws_region: ${{ vars.AWS_REGION }}
       environment: prod
       service_name: server
+      organization: teacherfox
