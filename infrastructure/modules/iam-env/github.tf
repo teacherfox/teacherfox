@@ -1,14 +1,4 @@
 locals {
-  ecr_actions = [
-    "ecr:BatchGetImage",
-    "ecr:BatchCheckLayerAvailability",
-    "ecr:CompleteLayerUpload",
-    "ecr:GetDownloadUrlForLayer",
-    "ecr:InitiateLayerUpload",
-    "ecr:GetDownloadUrlForLayer",
-    "ecr:PutImage",
-    "ecr:UploadLayerPart"
-  ]
   github_provider_url = "token.actions.githubusercontent.com"
   github_audience = "sts.amazonaws.com"
 }
@@ -43,23 +33,6 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
 }
 
 data "aws_iam_policy_document" "services_deploy" {
-  statement {
-    actions   = local.ecr_actions
-    effect    = "Allow"
-    resources = var.ecr_repo_arns
-  }
-
-  statement {
-    actions   = ["ecr:GetAuthorizationToken"]
-    effect    = "Allow"
-    resources = ["*"]
-  }
-
-  statement {
-    actions   = ["iam:PassRole", "ecs:DeployService", "ecs:DescribeServices", "ecs:UpdateService"]
-    effect    = "Allow"
-    resources = var.ecs_service_arns
-  }
 
 #  dynamic "statement" {
 #    for_each = toset(length(local.server_ecr_arns) > 0 ? ["a"] : [])

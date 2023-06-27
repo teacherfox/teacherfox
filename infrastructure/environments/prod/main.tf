@@ -49,8 +49,6 @@ module "iam" {
 module "iam_env" {
   source        = "../../modules/iam-env"
   environment   = var.environment
-  ecr_repo_arns = module.cluster.ecr_repo_arns
-  ecs_service_arns = module.cluster.ecs_service_arns
   github_openid_connect_provider_arn = module.iam.github_openid_connect_provider_arn
   organization  = local.organization
 }
@@ -93,6 +91,7 @@ module "cluster" {
   certificate_arn = module.route53.wildcard_certificate_arn
   database_subnet_ids = module.vpc.database_subnet_ids
   environment = var.environment
+  github_role_name = module.iam_env.github_role_name
   lb_subnet_ids = module.vpc.public_subnet_ids
   organization = local.organization
   service_subnet_ids = module.vpc.private_subnet_ids

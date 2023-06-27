@@ -82,10 +82,12 @@ jobs:
       - build
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Download service task definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service_name }} \
-          --query taskDefinition | jq -r 'del(
+          --query taskDefinition --output json | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -93,20 +95,20 @@ jobs:
             .status,
             .registeredAt,
             .registeredBy
-          )' > task-def-service.json
+          )' > task-def.json
 
       - name: Update Amazon ECS task definition for service
-        id: task-def-service
+        id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ inputs.service_name }}/task-def-service.json
+          task-definition: infrastructure/environments/prod/task-def.json
           container-name: ${{ inputs.environment }}-${{ inputs.service_name }}
           image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
 
       - name: Deploy Amazon ECS backend service with new service task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def-service.outputs.task-definition }}
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ inputs.environment }}-${{ inputs.service_name }}
           cluster: ${{ inputs.environment }}-${{ inputs.organization }}
           wait-for-service-stability: true

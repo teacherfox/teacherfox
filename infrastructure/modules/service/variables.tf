@@ -37,3 +37,7 @@ variable "certificate_arn" {
 variable "cluster_name" {
   type = string
 }
+
+variable "github_role_name" {
+  type = string
+}
