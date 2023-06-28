@@ -97,6 +97,8 @@ jobs:
             .registeredBy
           )' > task-def.json
 
+      - run: echo "version=$(cat task-def.json)" >> $GITHUB_OUTPUT
+
       - name: Update Amazon ECS task definition for service
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
