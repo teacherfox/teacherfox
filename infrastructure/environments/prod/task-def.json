@@ -1,0 +1,50 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "prod-server",
+      "image": "721556211078.dkr.ecr.eu-central-1.amazonaws.com/prod-server/prod-server:latest",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 4000,
+          "hostPort": 4000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "NODE_OPTIONS",
+          "value": "--max-old-space-size=409"
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:721556211078:secret:prod/server/database/urls-o8d9vt:url::"
+        },
+        {
+          "name": "READ_ONLY_DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:721556211078:secret:prod/server/database/urls-o8d9vt:reader_url::"
+        }
+      ]
+    }
+  ],
+  "family": "prod-server",
+  "taskRoleArn": "arn:aws:iam::721556211078:role/prod-server-task-role",
+  "executionRoleArn": "arn:aws:iam::721556211078:role/prod-server-execution-role",
+  "networkMode": "awsvpc",
+  "volumes": [],
+  "placementConstraints": [],
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512"
+}

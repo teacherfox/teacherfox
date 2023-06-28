@@ -29,3 +29,7 @@ variable "lb_subnet_ids" {
 variable "organization" {
   type = string
 }
+
+variable "github_role_name" {
+  type = string
+}

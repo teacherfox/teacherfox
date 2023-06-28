@@ -1,4 +1,14 @@
 locals {
+  ecr_actions = [
+    "ecr:BatchGetImage",
+    "ecr:BatchCheckLayerAvailability",
+    "ecr:CompleteLayerUpload",
+    "ecr:GetDownloadUrlForLayer",
+    "ecr:InitiateLayerUpload",
+    "ecr:GetDownloadUrlForLayer",
+    "ecr:PutImage",
+    "ecr:UploadLayerPart"
+  ]
   name          = "${var.environment}-${var.service_name}"
   service_port   = 4000
   service_memory = 512
@@ -297,6 +307,22 @@ resource "aws_ecs_task_definition" "task_definition" {
         {
           name  = "NODE_OPTIONS"
           value = "--max-old-space-size=${floor(local.service_memory * 0.8)}"
+        },
+        {
+          name  = "AWS_ACCOUNT_ID",
+          value = data.aws_caller_identity.current.account_id
+        },
+        {
+          name  = "AWS_REGION",
+          value = data.aws_region.current.name
+        },
+        {
+          name  = "NODE_ENV"
+          value = "production"
+        },
+        {
+          name  = "MODE"
+          value = var.environment
         }
       ]
     },
@@ -341,4 +367,40 @@ resource "aws_ecs_service" "ecs_service" {
   lifecycle {
     ignore_changes = [desired_count, task_definition]
   }
+}
+
+data "aws_iam_policy_document" "github_operating" {
+  statement {
+    actions   = ["ecr:GetAuthorizationToken", "ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition"]
+    effect    = "Allow"
+    resources = ["*"]
+  }
+
+  statement {
+    actions   = local.ecr_actions
+    effect    = "Allow"
+    resources = [aws_ecr_repository.ecr_repo.arn]
+  }
+
+  statement {
+    actions   = ["iam:PassRole"]
+    effect    = "Allow"
+    resources = [aws_iam_role.task_role.arn, aws_iam_role.execution_role.arn]
+  }
+
+  statement {
+    actions   = ["ecs:UpdateService", "ecs:DescribeServices"]
+    effect    = "Allow"
+    resources = [aws_ecs_service.ecs_service.name]
+  }
+}
+
+resource "aws_iam_policy" "ecs_deploying_policy" {
+  name   = "${var.environment}-github-operating"
+  policy = data.aws_iam_policy_document.github_operating.json
+}
+
+resource "aws_iam_role_policy_attachment" "github_operating" {
+  role       = var.github_role_name
+  policy_arn = aws_iam_policy.ecs_deploying_policy.arn
 }

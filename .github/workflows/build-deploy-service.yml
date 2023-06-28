@@ -12,6 +12,9 @@ on:
       service_name:
         required: true
         type: string
+      organization:
+        required: true
+        type: string
     secrets:
       aws_account_id:
         required: true
@@ -63,8 +66,8 @@ jobs:
           context: .
           file: ./apps/${{ inputs.service_name }}/Dockerfile
           platforms: linux/arm64
-          cache-from: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache
-          cache-to: type=registry,ref=ghcr.io/teacherfox/${{ inputs.service_name }}:prod-cache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:prod-cache
+          cache-to: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:prod-cache,mode=max
 
   deploy:
 
@@ -79,10 +82,12 @@ jobs:
       - build
 
     steps:
-      - name: Download server task definition
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download service task definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service_name }} \
-          --query taskDefinition | jq -r 'del(
+          --query taskDefinition --output json | jq -r 'del(
             .taskDefinitionArn,
             .requiresAttributes,
             .compatibilities,
@@ -90,12 +95,20 @@ jobs:
             .status,
             .registeredAt,
             .registeredBy
-          )' > be_taskdef.json
+          )' > task-def.json
 
-      - name: Update Amazon ECS task definition for server
-        id: task-def-server
+      - name: Update Amazon ECS task definition for service
+        id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: be_taskdef.json
-          container-name: ${{ inputs.ecr_server_repository }}
+          task-definition: infrastructure/environments/prod/task-def.json
+          container-name: ${{ inputs.environment }}-${{ inputs.service_name }}
           image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
+
+      - name: Deploy Amazon ECS backend service with new service task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ inputs.environment }}-${{ inputs.service_name }}
+          cluster: ${{ inputs.environment }}-${{ inputs.organization }}
+          wait-for-service-stability: true
