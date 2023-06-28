@@ -229,7 +229,7 @@ resource "aws_iam_role_policy_attachment" "task_role_attachment" {
 
 resource "aws_cloudwatch_log_group" "service_log_group" {
   name = "/ecs/${var.environment}/${var.service_name}"
-  retention_in_days = var.environment == "prod" ? 0 : 187
+  retention_in_days = var.environment == "prod" ? 0 : 180
 }
 
 module "database" {

@@ -89,6 +89,10 @@ jobs:
           role-session-name: ${{ inputs.environment }}-github
           aws-region: ${{ inputs.aws_region }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: Download service task definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service_name }} \
