@@ -324,7 +324,15 @@ resource "aws_ecs_task_definition" "task_definition" {
           name  = "MODE"
           value = var.environment
         }
-      ]
+      ],
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.service_log_group.name
+          awslogs-region        = data.aws_region.current.name
+          awslogs-stream-prefix = local.name
+        }
+      }
     },
   ],
   ))
@@ -391,7 +399,7 @@ data "aws_iam_policy_document" "github_operating" {
   statement {
     actions   = ["ecs:UpdateService", "ecs:DescribeServices"]
     effect    = "Allow"
-    resources = [aws_ecs_service.ecs_service.name]
+    resources = ["arn:aws:ecs:${data.aws_caller_identity.current.account_id}:${data.aws_caller_identity.current.account_id}:service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"]
   }
 }
 
