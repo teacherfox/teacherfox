@@ -229,6 +229,7 @@ resource "aws_iam_role_policy_attachment" "task_role_attachment" {
 
 resource "aws_cloudwatch_log_group" "service_log_group" {
   name = "/ecs/${var.environment}/${var.service_name}"
+  retention_in_days = var.environment == "prod" ? 0 : 187
 }
 
 module "database" {
@@ -330,7 +331,7 @@ resource "aws_ecs_task_definition" "task_definition" {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.service_log_group.name
           awslogs-region        = data.aws_region.current.name
-          awslogs-stream-prefix = local.name
+          awslogs-stream-prefix = "ecs"
         }
       }
     },
@@ -393,7 +394,7 @@ data "aws_iam_policy_document" "github_operating" {
   statement {
     actions   = ["ecs:UpdateService", "ecs:DescribeServices"]
     effect    = "Allow"
-    resources = ["arn:aws:ecs:${data.aws_caller_identity.current.account_id}:${data.aws_caller_identity.current.account_id}:service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"]
+    resources = ["arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"]
   }
 }
 

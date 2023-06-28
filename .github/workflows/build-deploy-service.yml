@@ -82,8 +82,13 @@ jobs:
       - build
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.aws_account_id }}:role/${{ inputs.environment }}-github
+          role-session-name: ${{ inputs.environment }}-github
+          aws-region: ${{ inputs.aws_region }}
+
       - name: Download service task definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ inputs.environment }}-${{ inputs.service_name }} \
@@ -97,13 +102,11 @@ jobs:
             .registeredBy
           )' > task-def.json
 
-      - run: echo "version=$(cat task-def.json)" >> $GITHUB_OUTPUT
-
       - name: Update Amazon ECS task definition for service
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: infrastructure/environments/prod/task-def.json
+          task-definition: task-def.json
           container-name: ${{ inputs.environment }}-${{ inputs.service_name }}
           image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
 
