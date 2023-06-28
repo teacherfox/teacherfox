@@ -307,6 +307,22 @@ resource "aws_ecs_task_definition" "task_definition" {
         {
           name  = "NODE_OPTIONS"
           value = "--max-old-space-size=${floor(local.service_memory * 0.8)}"
+        },
+        {
+          name  = "AWS_ACCOUNT_ID",
+          value = data.aws_caller_identity.current.account_id
+        },
+        {
+          name  = "AWS_REGION",
+          value = data.aws_region.current.name
+        },
+        {
+          name  = "NODE_ENV"
+          value = "production"
+        },
+        {
+          name  = "MODE"
+          value = var.environment
         }
       ]
     },
