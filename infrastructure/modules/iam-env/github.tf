@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "services_deploy" {
     resources = ["*"]
   }
 
-  #  dynamic "statement" {
+#  dynamic "statement" {
 #    for_each = toset(length(local.server_ecr_arns) > 0 ? ["a"] : [])
 #
 #    content {
