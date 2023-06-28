@@ -189,7 +189,7 @@ data "aws_iam_policy_document" "service_assume_role_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
+      identifiers = ["ec2.amazonaws.com", "ecs-tasks.amazonaws.com"]
     }
   }
 }
@@ -212,13 +212,13 @@ data "aws_iam_policy_document" "task_policy_document" {
     actions   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
     resources = concat([
       "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/${var.service_name}/*",
-      module.database.cluster_master_user_secret_arn
+      aws_secretsmanager_secret.database_master_password.arn
     ])
   }
 }
 
 resource "aws_iam_policy" "task_policy" {
-  name   = "${local.name}-execution-policy"
+  name   = "${local.name}-task-policy"
   policy = data.aws_iam_policy_document.task_policy_document.json
 }
 
@@ -227,9 +227,19 @@ resource "aws_iam_role_policy_attachment" "task_role_attachment" {
   policy_arn = aws_iam_policy.task_policy.arn
 }
 
+#resource "aws_iam_policy" "execution_policy" {
+#  name   = "${local.name}-execution-policy"
+#  policy = data.aws_iam_policy_document.task_policy_document.json
+#}
+#
+#resource "aws_iam_role_policy_attachment" "execution_role_attachment" {
+#  role       = aws_iam_role.execution_role.name
+#  policy_arn = aws_iam_policy.execution_policy.arn
+#}
+
 resource "aws_cloudwatch_log_group" "service_log_group" {
   name = "/ecs/${var.environment}/${var.service_name}"
-  retention_in_days = var.environment == "prod" ? 0 : 187
+  retention_in_days = var.environment == "prod" ? 0 : 180
 }
 
 module "database" {
