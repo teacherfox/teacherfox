@@ -207,7 +207,7 @@ resource "aws_iam_role" "task_role" {
   assume_role_policy = data.aws_iam_policy_document.service_assume_role_policy.json
 }
 
-data "aws_iam_policy_document" "task_policy_document" {
+data "aws_iam_policy_document" "execution_policy_document" {
   statement {
     actions   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
     resources = concat([
@@ -217,25 +217,15 @@ data "aws_iam_policy_document" "task_policy_document" {
   }
 }
 
-resource "aws_iam_policy" "task_policy" {
-  name   = "${local.name}-task-policy"
-  policy = data.aws_iam_policy_document.task_policy_document.json
+resource "aws_iam_policy" "execution_policy" {
+  name   = "${local.name}-execution-policy"
+  policy = data.aws_iam_policy_document.execution_policy_document.json
 }
 
-resource "aws_iam_role_policy_attachment" "task_role_attachment" {
-  role       = aws_iam_role.task_role.name
-  policy_arn = aws_iam_policy.task_policy.arn
+resource "aws_iam_role_policy_attachment" "execution_role_attachment" {
+  role       = aws_iam_role.execution_role.name
+  policy_arn = aws_iam_policy.execution_policy.arn
 }
-
-#resource "aws_iam_policy" "execution_policy" {
-#  name   = "${local.name}-execution-policy"
-#  policy = data.aws_iam_policy_document.task_policy_document.json
-#}
-#
-#resource "aws_iam_role_policy_attachment" "execution_role_attachment" {
-#  role       = aws_iam_role.execution_role.name
-#  policy_arn = aws_iam_policy.execution_policy.arn
-#}
 
 resource "aws_cloudwatch_log_group" "service_log_group" {
   name = "/ecs/${var.environment}/${var.service_name}"
