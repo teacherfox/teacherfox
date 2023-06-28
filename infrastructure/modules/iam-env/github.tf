@@ -33,8 +33,13 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
 }
 
 data "aws_iam_policy_document" "services_deploy" {
+  statement {
+    actions   = ["ecr:GetAuthorizationToken", "ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition"]
+    effect    = "Allow"
+    resources = ["*"]
+  }
 
-#  dynamic "statement" {
+  #  dynamic "statement" {
 #    for_each = toset(length(local.server_ecr_arns) > 0 ? ["a"] : [])
 #
 #    content {

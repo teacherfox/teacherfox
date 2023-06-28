@@ -379,12 +379,6 @@ resource "aws_ecs_service" "ecs_service" {
 
 data "aws_iam_policy_document" "github_operating" {
   statement {
-    actions   = ["ecr:GetAuthorizationToken", "ecs:DescribeTaskDefinition", "ecs:RegisterTaskDefinition"]
-    effect    = "Allow"
-    resources = ["*"]
-  }
-
-  statement {
     actions   = local.ecr_actions
     effect    = "Allow"
     resources = [aws_ecr_repository.ecr_repo.arn]
