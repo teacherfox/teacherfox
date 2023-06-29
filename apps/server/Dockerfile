@@ -44,7 +44,6 @@ RUN pnpm install --prod
 
 FROM node:lts-alpine AS runner
 WORKDIR /app
-ENV DATABASE_URL="postgresql://postgres:postgre@host.docker.internal:5432/yoga-tutorial?schema=public&connection_limit=5"
 
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs

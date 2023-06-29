@@ -9,7 +9,7 @@ locals {
     "ecr:PutImage",
     "ecr:UploadLayerPart"
   ]
-  name          = "${var.environment}-${var.service_name}"
+  name           = "${var.environment}-${var.service_name}"
   service_port   = 4000
   service_memory = 512
 }
@@ -66,7 +66,7 @@ resource "aws_security_group" "lb_service" {
   vpc_id      = var.vpc_id
   description = "LB-BE ${local.name}"
   tags        = {
-    Name              = "${local.name}-lb"
+    Name               = "${local.name}-lb"
     ServiceEnvironment = var.environment
   }
 
@@ -130,6 +130,20 @@ resource "aws_lb_target_group" "lb_target_group" {
   }
 }
 
+resource "aws_route53_record" "domain_record" {
+  for_each = toset(["A", "AAAA"])
+  zone_id  = var.domain_zone_id
+  name     = "api.${var.domain_name}"
+  type     = each.key
+
+  alias {
+    name                   = aws_lb.service_lb.dns_name
+    zone_id                = aws_lb.service_lb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+
 resource "aws_ecr_repository" "ecr_repo" {
   name                 = local.name
   image_tag_mutability = "MUTABLE"
@@ -147,7 +161,7 @@ resource "aws_lb" "service_lb" {
   drop_invalid_header_fields = true
   internal                   = false
   enable_http2               = true
-  enable_deletion_protection = (var.environment == "production" || var.environment == "preproduction" || var.environment == "staging") ? true : false
+  enable_deletion_protection = var.environment == "prod" ? true : false
   ip_address_type            = "dualstack"
   subnets                    = var.lb_subnet_ids
   security_groups            = [aws_security_group.lb_service.id]
@@ -228,7 +242,7 @@ resource "aws_iam_role_policy_attachment" "execution_role_attachment" {
 }
 
 resource "aws_cloudwatch_log_group" "service_log_group" {
-  name = "/ecs/${var.environment}/${var.service_name}"
+  name              = "/ecs/${var.environment}/${var.service_name}"
   retention_in_days = var.environment == "prod" ? 0 : 180
 }
 
@@ -255,7 +269,7 @@ data "aws_secretsmanager_secret_version" "current" {
 }
 
 resource "aws_secretsmanager_secret" "database_master_password" {
-  name  = "${var.environment}/${var.service_name}/database/urls"
+  name = "${var.environment}/${var.service_name}/database/urls"
 }
 
 
@@ -263,7 +277,7 @@ resource "aws_secretsmanager_secret" "database_master_password" {
 resource "aws_secretsmanager_secret_version" "database_master_password_version" {
   secret_id     = aws_secretsmanager_secret.database_master_password.id
   secret_string = jsonencode({
-    url = "postgresql://${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["username"]}:${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["password"]}@${module.database.cluster_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
+    url        = "postgresql://${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["username"]}:${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["password"]}@${module.database.cluster_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
     reader_url = "postgresql://${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["username"]}:${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["password"]}@${module.database.cluster_read_only_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
   })
 
@@ -328,7 +342,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       ],
       logConfiguration = {
         logDriver = "awslogs"
-        options = {
+        options   = {
           awslogs-group         = aws_cloudwatch_log_group.service_log_group.name
           awslogs-region        = data.aws_region.current.name
           awslogs-stream-prefix = "ecs"
@@ -394,7 +408,9 @@ data "aws_iam_policy_document" "github_operating" {
   statement {
     actions   = ["ecs:UpdateService", "ecs:DescribeServices"]
     effect    = "Allow"
-    resources = ["arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"]
+    resources = [
+      "arn:aws:ecs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"
+    ]
   }
 }
 

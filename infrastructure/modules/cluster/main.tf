@@ -19,6 +19,8 @@ module "server" {
   cluster_id = aws_ecs_cluster.teacherfox.id
   cluster_name = aws_ecs_cluster.teacherfox.name
   database_subnet_ids = var.database_subnet_ids
+  domain_name = var.domain_name
+  domain_zone_id = var.domain_zone_id
   environment = var.environment
   github_role_name = var.github_role_name
   lb_subnet_ids = var.lb_subnet_ids

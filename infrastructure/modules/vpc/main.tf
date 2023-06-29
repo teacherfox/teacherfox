@@ -81,7 +81,7 @@ resource "aws_nat_gateway" "nat" {
 }
 
 module "personal_nat" {
-  source        = "../personal_nat"
+  source        = "../personal-nat"
   count         = var.use_personal_nat ? length(aws_eip.nat) : 0
   environment   = var.environment
   allocation_id = element(aws_eip.nat.*.id, count.index)

@@ -89,6 +89,8 @@ module "cluster" {
   bastion_security_group_id = module.bastion.security_group_id
   certificate_arn = module.route53.wildcard_certificate_arn
   database_subnet_ids = module.vpc.database_subnet_ids
+  domain_name = module.route53.domain_name
+  domain_zone_id = module.route53.zone_id
   environment = var.environment
   github_role_name = module.iam_env.github_role_name
   lb_subnet_ids = module.vpc.public_subnet_ids
