@@ -7,7 +7,7 @@ data "aws_region" "current" {}
 resource "null_resource" "test_lambda_nodejs_layer" {
   provisioner "local-exec" {
     working_dir = local.function_path
-    command = "cd ${local.function_path} && npm install"
+    command = "npm install"
   }
 
   triggers = {
