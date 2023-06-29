@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "",
   "dependencies": {
-    "nanoid": "^4.0.0"
+    "nanoid": "^4.0.0",
+    "prisma": "^4.16.1"
   }
 }
