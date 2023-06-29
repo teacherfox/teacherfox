@@ -1,17 +1,20 @@
+locals {
+  function_path = "${path.module}/function"
+}
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 resource "null_resource" "test_lambda_nodejs_layer" {
   provisioner "local-exec" {
-    working_dir = "${path.module}/function"
-    command = "cd ${path.module} && npm install"
+    working_dir = local.function_path
+    command = "cd ${local.function_path} && npm install"
   }
 
   triggers = {
-    index = sha256(file("${path.module}/function/index.js"))
-    package = sha256(file("${path.module}/function/package.json"))
-    lock = sha256(file("${path.module}/function/package-lock.json"))
-    node = sha256(join("",fileset(path.module, "function/**/*.js")))
+    index = sha256(file("${local.function_path}/index.js"))
+    package = sha256(file("${local.function_path}/package.json"))
+    lock = sha256(file("${local.function_path}/package-lock.json"))
+    node = sha256(join("",fileset(local.function_path, "**/*.js")))
   }
 }
 
@@ -62,12 +65,12 @@ resource "aws_iam_role_policy_attachment" "github_server_deploy" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_dir  = "${path.module}/function"
-  output_path = "${path.module}/function.zip"
+  source_dir  = local.function_path
+  output_path = "${local.function_path}.zip"
 }
 
 resource "aws_lambda_function" "test_lambda" {
-  filename      = "${path.module}/archive/function.zip"
+  filename      = "${local.function_path}.zip"
   function_name = "lambda_function_name"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "index.handler"
