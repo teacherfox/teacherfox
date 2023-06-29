@@ -1,73 +1,61 @@
 
-# Archive lambda function
-data "archive_file" "main" {
-  type        = "zip"
-  source_dir  = "lambda/function"
-  output_path = "${path.module}/.terraform/archive_files/function.zip"
-
-  depends_on = [null_resource.main]
-}
-
-# Provisioner to install dependencies in lambda package before upload it.
-resource "null_resource" "main" {
+resource "null_resource" "test_lambda_nodejs_layer" {
+  provisioner "local-exec" {
+    working_dir = "${path.module}/lambda/function"
+    command = "npm install"
+  }
 
   triggers = {
-    updated_at = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = <<EOF
-    yarn
-    EOF
-
-    working_dir = "${path.module}/lambda/function"
+    rerun_every_time = "${uuid()}"
   }
 }
 
-resource "aws_lambda_function" "lambda_hello_world" {
-  filename      = "${path.module}/.terraform/archive_files/function.zip"
-  function_name = "lambda-hello-world"
-  role          = aws_iam_role.lambda_hello_world_role.arn
-  handler       = "index.handler"
-  runtime       = "nodejs16.x"
-  timeout = 300
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
 
-  source_code_hash = data.archive_file.main.output_base64sha256
-}
-
-resource "aws_iam_role" "lambda_hello_world_role" {
-  name               = "lambda_hello_world_role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
     }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "iam_for_lambda" {
+  name               = "iam_for_lambda"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
   ]
 }
-EOF
-  inline_policy {
-    name = "lamda-hello-world-policy"
-    policy = jsonencode({
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "LambdaHelloWorld1",
-          "Effect" : "Allow",
-          "Action" : [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents",
-          ],
-          "Resource" : "*"
-        }
-      ]
-    })
+
+data "archive_file" "lambda" {
+  type        = "zip"
+  source_dir  = "${path.module}/function"
+  output_path = "${path.module}/archive/function.zip"
+}
+
+resource "aws_lambda_function" "test_lambda" {
+  filename      = "${path.module}/archive/function.zip"
+  function_name = "lambda_function_name"
+  role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "index.handler"
+
+  source_code_hash = data.archive_file.lambda.output_base64sha256
+
+  runtime = "nodejs18.x"
+
+  vpc_config {
+    # Every subnet should be able to reach an EFS mount target in the same Availability Zone. Cross-AZ mounts are not permitted.
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [var.bastion_security_group_id]
+  }
+
+  environment {
+    variables = {
+      foo = "bar"
+    }
   }
 }
