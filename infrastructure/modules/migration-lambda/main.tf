@@ -1,12 +1,17 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 resource "null_resource" "test_lambda_nodejs_layer" {
   provisioner "local-exec" {
-    working_dir = "${path.module}/lambda/function"
-    command = "npm install"
+    working_dir = "${path.module}/function"
+    command = "cd ${path.module} && npm install"
   }
 
   triggers = {
-    rerun_every_time = "${uuid()}"
+    index = sha256(file("${path.module}/function/index.js"))
+    package = sha256(file("${path.module}/function/package.json"))
+    lock = sha256(file("${path.module}/function/package-lock.json"))
+    node = sha256(join("",fileset(path.module, "function/**/*.js")))
   }
 }
 
@@ -31,10 +36,34 @@ resource "aws_iam_role" "iam_for_lambda" {
   ]
 }
 
+data "aws_iam_policy_document" "lambda_policy_document" {
+  statement {
+    actions   = ["ec2:CreateNetworkInterface", "ec2:DescribeNetworkInterfaces"]
+    effect    = "Allow"
+    resources = ["*"]
+  }
+
+  statement {
+    actions   = ["ec2:DeleteNetworkInterface"]
+    effect    = "Allow"
+    resources = ["arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*/*"]
+  }
+}
+
+resource "aws_iam_policy" "lambda_policy" {
+  name   = "lambda_policy"
+  policy = data.aws_iam_policy_document.lambda_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "github_server_deploy" {
+  role       = aws_iam_role.iam_for_lambda.name
+  policy_arn = aws_iam_policy.lambda_policy.arn
+}
+
 data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "${path.module}/function"
-  output_path = "${path.module}/archive/function.zip"
+  output_path = "${path.module}/function.zip"
 }
 
 resource "aws_lambda_function" "test_lambda" {
