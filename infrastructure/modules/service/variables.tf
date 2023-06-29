@@ -41,3 +41,11 @@ variable "cluster_name" {
 variable "github_role_name" {
   type = string
 }
+
+variable "domain_zone_id" {
+  type = string
+}
+
+variable "domain_name" {
+  type = string
+}
