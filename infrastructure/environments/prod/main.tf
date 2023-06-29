@@ -102,4 +102,6 @@ module "cluster" {
 
 module "migration_lambda" {
   source = "../../modules/migration-lambda"
+  subnet_ids = module.vpc.public_subnet_ids
+  bastion_security_group_id = module.bastion.security_group_id
 }
