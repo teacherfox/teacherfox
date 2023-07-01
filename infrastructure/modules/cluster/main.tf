@@ -24,6 +24,8 @@ module "server" {
   environment = var.environment
   github_role_name = var.github_role_name
   lb_subnet_ids = var.lb_subnet_ids
+  min_instances = var.environment == "production" ? 2 : 1
+  max_instances = 10
   service_name = "server"
   service_subnet_ids = var.service_subnet_ids
   vpc_id = var.vpc_id

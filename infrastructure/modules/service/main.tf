@@ -11,7 +11,7 @@ locals {
   ]
   name           = "${var.environment}-${var.service_name}"
   service_port   = 4000
-  service_memory = 512
+  service_memory = 1024
 }
 
 data "aws_caller_identity" "current" {}
@@ -120,7 +120,8 @@ resource "aws_lb_target_group" "lb_target_group" {
     healthy_threshold   = 3
     unhealthy_threshold = 5
     protocol            = "HTTP"
-    path                = "/"
+    path                = "/health"
+    timeout             = 6
   }
 
   lifecycle {
@@ -209,8 +210,8 @@ data "aws_iam_policy_document" "service_assume_role_policy" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name                = "${local.name}-execution-role"
-  assume_role_policy  = data.aws_iam_policy_document.service_assume_role_policy.json
+  name               = "${local.name}-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.service_assume_role_policy.json
 }
 
 resource "aws_iam_role" "task_role" {
@@ -282,7 +283,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   execution_role_arn       = aws_iam_role.execution_role.arn
   task_role_arn            = aws_iam_role.task_role.arn
   network_mode             = "awsvpc"
-  cpu                      = 256
+  cpu                      = 512
   memory                   = local.service_memory
   container_definitions    = jsonencode(concat([
     {
@@ -352,7 +353,7 @@ resource "aws_ecs_service" "ecs_service" {
   name            = local.name
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.task_definition.arn
-  desired_count   = var.environment == "prod" ? 2 : 1
+  desired_count   = var.min_instances
   launch_type     = "FARGATE"
 
   load_balancer {
@@ -378,6 +379,30 @@ resource "aws_ecs_service" "ecs_service" {
 
   lifecycle {
     ignore_changes = [desired_count, task_definition]
+  }
+}
+
+resource "aws_appautoscaling_target" "scaling_target" {
+  max_capacity       = var.max_instances
+  min_capacity       = var.min_instances
+  resource_id        = "service/${var.cluster_name}/${aws_ecs_service.ecs_service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "scaling_policy" {
+  name               = local.name
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.scaling_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.scaling_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.scaling_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value = 75
   }
 }
 
