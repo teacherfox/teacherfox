@@ -25,6 +25,12 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 # Cluster
 ################################################################################
 
+# Only for initialization
+resource "random_string" "server_database_password" {
+  length  = 16
+  special = false
+}
+
 resource "aws_rds_cluster" "this" {
   allow_major_version_upgrade         = !local.is_prod
   apply_immediately                   = !local.is_prod
@@ -41,7 +47,7 @@ resource "aws_rds_cluster" "this" {
   engine_version                      = data.aws_rds_engine_version.postgresql.version
   final_snapshot_identifier           = local.is_prod ? "${local.name}-final" : null
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
-  manage_master_user_password         = true
+  master_password                     = random_string.server_database_password.result
   master_username                     = replace("${var.environment}-${var.service}", "-", "_")
   port                                = local.port
   preferred_maintenance_window        = local.preferred_maintenance_window

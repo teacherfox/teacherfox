@@ -290,6 +290,9 @@ resource "aws_iam_user_group_membership" "administrators_membership" {
   depends_on = [aws_iam_user.users]
 }
 
+data "external" "github_thumbprint" {
+  program = ["${path.module}/thumbprint.sh", local.github_provider_url]
+}
 
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://${local.github_provider_url}"
@@ -298,5 +301,5 @@ resource "aws_iam_openid_connect_provider" "github" {
     local.github_audience,
   ]
 
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+  thumbprint_list = [data.external.github_thumbprint.result.thumbprint]
 }

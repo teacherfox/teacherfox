@@ -69,11 +69,6 @@ output "cluster_master_username" {
   sensitive   = true
 }
 
-output "cluster_master_user_secret_arn" {
-  description = "The generated database master user secret when `manage_master_user_password` is set to `true`"
-  value       = aws_rds_cluster.this.master_user_secret[0].secret_arn
-}
-
 output "cluster_hosted_zone_id" {
   description = "The Route53 Hosted Zone ID of the endpoint"
   value       = try(aws_rds_cluster.this.hosted_zone_id, null)

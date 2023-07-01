@@ -51,4 +51,4 @@ RUN adduser --system --uid 1001 serverjs
 USER serverjs
 COPY --from=stripper /app .
 
-CMD node --conditions=javascript apps/server/dist/index.js
+CMD npm start -w server

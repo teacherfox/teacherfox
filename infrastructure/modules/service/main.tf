@@ -211,9 +211,6 @@ data "aws_iam_policy_document" "service_assume_role_policy" {
 resource "aws_iam_role" "execution_role" {
   name                = "${local.name}-execution-role"
   assume_role_policy  = data.aws_iam_policy_document.service_assume_role_policy.json
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-  ]
 }
 
 resource "aws_iam_role" "task_role" {
@@ -241,6 +238,11 @@ resource "aws_iam_role_policy_attachment" "execution_role_attachment" {
   policy_arn = aws_iam_policy.execution_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "managed_execution_role_attachment" {
+  role       = aws_iam_role.execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
 resource "aws_cloudwatch_log_group" "service_log_group" {
   name              = "/ecs/${var.environment}/${var.service_name}"
   retention_in_days = var.environment == "prod" ? 0 : 180
@@ -260,14 +262,6 @@ module "database" {
   vpc_id                    = var.vpc_id
 }
 
-data "aws_secretsmanager_secret" "database_user_secret" {
-  arn = module.database.cluster_master_user_secret_arn
-}
-
-data "aws_secretsmanager_secret_version" "current" {
-  secret_id = data.aws_secretsmanager_secret.database_user_secret.id
-}
-
 resource "aws_secretsmanager_secret" "database_master_password" {
   name = "${var.environment}/${var.service_name}/database/urls"
 }
@@ -277,14 +271,9 @@ resource "aws_secretsmanager_secret" "database_master_password" {
 resource "aws_secretsmanager_secret_version" "database_master_password_version" {
   secret_id     = aws_secretsmanager_secret.database_master_password.id
   secret_string = jsonencode({
-    url        = "postgresql://${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["username"]}:${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["password"]}@${module.database.cluster_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
-    reader_url = "postgresql://${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["username"]}:${jsondecode(data.aws_secretsmanager_secret_version.current.secret_string)["password"]}@${module.database.cluster_read_only_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
+    url        = "postgresql://${module.database.cluster_master_username}:${module.database.cluster_master_password}@${module.database.cluster_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
+    reader_url = "postgresql://${module.database.cluster_master_username}:${module.database.cluster_master_password}@${module.database.cluster_read_only_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
   })
-
-
-  lifecycle {
-    ignore_changes = [secret_string]
-  }
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
