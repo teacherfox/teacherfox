@@ -6,7 +6,7 @@ locals {
 resource "aws_acm_certificate" "wildcard" {
   domain_name               = local.domain
   validation_method         = "DNS"
-  subject_alternative_names = ["*.${local.domain}"]
+  subject_alternative_names = ["*.${local.domain}", local.domain]
 }
 
 

@@ -3,10 +3,16 @@ import { createServer } from 'http';
 import { createContext } from './context.js';
 import schema from './schema/index.js';
 import { logger } from 'logger';
-import { PORT } from "./config/config.js";
+import { MODE, PORT } from "./config/config.js";
+import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
 
 const index = () => {
-  const yoga = createYoga({ schema, context: createContext });
+  const yoga = createYoga({
+      schema,
+      context: createContext,
+      graphiql: MODE !== 'production',
+      plugins: MODE !== 'production' ? [] : [useDisableIntrospection()]
+  });
   const server = createServer(yoga);
   const port = PORT;
   server.listen(port, () => {

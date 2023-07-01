@@ -49,3 +49,11 @@ variable "domain_zone_id" {
 variable "domain_name" {
   type = string
 }
+
+variable "min_instances" {
+  type = number
+}
+
+variable "max_instances" {
+  type = number
+}
