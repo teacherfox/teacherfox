@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "terraform_assume_role_policy" {
   }
 }
 
-data "external" "thumbprint" {
+data "external" "terraform_thumbprint" {
   program = ["${path.module}/thumbprint.sh", local.terraform_provider_url]
 }
 
@@ -48,5 +48,5 @@ resource "aws_iam_openid_connect_provider" "terraform_openid_connect_provider" {
     local.terraform_audience,
   ]
 
-  thumbprint_list = [data.external.thumbprint.result.thumbprint]
+  thumbprint_list = [data.external.terraform_thumbprint.result.thumbprint]
 }

@@ -12,10 +12,6 @@ concurrency:
 
 jobs:
   deploy_server:
-    permissions:
-      id-token: write
-      contents: read
-      packages: write
     uses: ./.github/workflows/build-deploy-service.yml
     secrets:
       aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}
