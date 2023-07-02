@@ -10,8 +10,8 @@ const index = () => {
   const yoga = createYoga({
       schema,
       context: createContext,
-      graphiql: MODE !== 'production',
-      plugins: MODE !== 'production' ? [] : [useDisableIntrospection()]
+      graphiql: MODE !== 'prod',
+      plugins: MODE !== 'prod' ? [] : [useDisableIntrospection()]
   });
   const server = createServer(yoga);
   const port = PORT;
