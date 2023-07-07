@@ -82,6 +82,20 @@ resource "aws_rds_cluster" "this" {
   depends_on = [aws_cloudwatch_log_group.this]
 }
 
+resource "aws_secretsmanager_secret" "urls" {
+  name = "${var.environment}/database/urls"
+}
+
+
+# Seed secret
+resource "aws_secretsmanager_secret_version" "database_master_password_version" {
+  secret_id     = aws_secretsmanager_secret.urls.id
+  secret_string = jsonencode({
+    url        = "postgresql://${aws_rds_cluster.this.master_username}:${aws_rds_cluster.this.master_password}@${aws_rds_cluster.this.endpoint}:${aws_rds_cluster.this.port}/${aws_rds_cluster.this.database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
+    reader_url = "postgresql://${aws_rds_cluster.this.master_username}:${aws_rds_cluster.this.master_password}@${aws_rds_cluster.this.reader_endpoint}:${aws_rds_cluster.this.port}/${aws_rds_cluster.this.database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
+  })
+}
+
 ################################################################################
 # Cluster Instance(s)
 ################################################################################

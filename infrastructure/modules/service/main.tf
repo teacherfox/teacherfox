@@ -224,7 +224,7 @@ data "aws_iam_policy_document" "execution_policy_document" {
     actions   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
     resources = concat([
       "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/${var.service_name}/*",
-      aws_secretsmanager_secret.database_master_password.arn
+      module.database.urls_arn
     ])
   }
 }
@@ -263,20 +263,6 @@ module "database" {
   vpc_id                    = var.vpc_id
 }
 
-resource "aws_secretsmanager_secret" "database_master_password" {
-  name = "${var.environment}/${var.service_name}/database/urls"
-}
-
-
-# Seed secret
-resource "aws_secretsmanager_secret_version" "database_master_password_version" {
-  secret_id     = aws_secretsmanager_secret.database_master_password.id
-  secret_string = jsonencode({
-    url        = "postgresql://${module.database.cluster_master_username}:${module.database.cluster_master_password}@${module.database.cluster_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
-    reader_url = "postgresql://${module.database.cluster_master_username}:${module.database.cluster_master_password}@${module.database.cluster_read_only_url}:${module.database.cluster_port}/${module.database.cluster_database_name}?schema=${var.environment == "prod" ? "public" : var.environment}"
-  })
-}
-
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = local.name
   requires_compatibilities = ["FARGATE"]
@@ -301,11 +287,11 @@ resource "aws_ecs_task_definition" "task_definition" {
       secrets = [
         {
           name      = "DATABASE_URL"
-          valueFrom = "${aws_secretsmanager_secret.database_master_password.arn}:url::"
+          valueFrom = "${module.database.urls_arn}:url::"
         },
         {
           name      = "READ_ONLY_DATABASE_URL"
-          valueFrom = "${aws_secretsmanager_secret.database_master_password.arn}:reader_url::"
+          valueFrom = "${module.database.urls_arn}:reader_url::"
         },
       ]
       environment = [
