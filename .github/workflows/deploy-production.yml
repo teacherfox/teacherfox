@@ -3,6 +3,9 @@ name: Deploy prod
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - apps/server/**
+      - packages/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
