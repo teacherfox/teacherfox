@@ -275,7 +275,7 @@ resource "aws_ecs_task_definition" "task_definition" {
     {
       cpu          = 0
       name         = local.name
-      image        = "${aws_ecr_repository.ecr_repo.repository_url}/${local.name}:latest"
+      image        = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
       essential    = true
       portMappings = [
         {

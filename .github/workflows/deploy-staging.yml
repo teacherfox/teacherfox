@@ -3,8 +3,14 @@ name: Deploy staging
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - apps/server/**
+      - packages/**
   pull_request:
     branches: [ "main" ]
+    paths:
+      - apps/server/**
+      - packages/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
