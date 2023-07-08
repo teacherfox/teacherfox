@@ -62,7 +62,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ inputs.environment }}-${{ inputs.service_name }}:latest
           context: .
           file: ./apps/${{ inputs.service_name }}/Dockerfile
           platforms: linux/arm64

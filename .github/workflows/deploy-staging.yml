@@ -6,11 +6,15 @@ on:
     paths:
       - apps/server/**
       - packages/**
+      - infrastructure/**
+      - .github/workflows/**
   pull_request:
     branches: [ "main" ]
     paths:
       - apps/server/**
       - packages/**
+      - infrastructure/**
+      - .github/workflows/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
