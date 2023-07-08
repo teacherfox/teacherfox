@@ -6,6 +6,8 @@ on:
     paths:
       - apps/server/**
       - packages/**
+      - infrastructure/**
+      - .github/workflows/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
