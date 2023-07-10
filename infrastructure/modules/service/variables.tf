@@ -61,3 +61,7 @@ variable "max_instances" {
 variable "route53_endpoint" {
   type = string
 }
+
+variable "create_database" {
+  type = bool
+}

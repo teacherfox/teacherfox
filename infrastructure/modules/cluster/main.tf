@@ -18,6 +18,7 @@ module "server" {
   certificate_arn = var.certificate_arn
   cluster_id = aws_ecs_cluster.teacherfox.id
   cluster_name = aws_ecs_cluster.teacherfox.name
+  create_database = true
   database_subnet_ids = var.database_subnet_ids
   domain_name = var.domain_name
   domain_zone_id = var.domain_zone_id
