@@ -12,6 +12,17 @@ locals {
   name           = "${var.environment}-${var.service_name}"
   service_port   = 4000
   service_memory = 1024
+
+  db_secrets = var.create_database ? [
+    {
+      name      = "DATABASE_URL"
+      valueFrom = "${module.database[0].urls_arn}:url::"
+    },
+    {
+      name      = "READ_ONLY_DATABASE_URL"
+      valueFrom = "${module.database[0].urls_arn}:reader_url::"
+    },
+  ] : []
 }
 
 data "aws_caller_identity" "current" {}
@@ -33,13 +44,13 @@ resource "aws_security_group_rule" "bastion_ssh_http_ingress" {
 }
 
 resource "aws_security_group_rule" "service_database" {
-  for_each                 = toset(["ingress", "egress"])
+  for_each                 = var.create_database ? toset(["ingress", "egress"]) : toset([])
   type                     = each.key
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
   security_group_id        = aws_security_group.service_security_group.id
-  source_security_group_id = module.database.security_group_id
+  source_security_group_id = module.database[0].security_group_id
 }
 
 resource "aws_security_group_rule" "lb_service_ingress" {
@@ -224,7 +235,7 @@ data "aws_iam_policy_document" "execution_policy_document" {
     actions   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
     resources = concat([
       "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/${var.service_name}/*",
-      module.database.urls_arn
+      var.create_database ? module.database[0].urls_arn : ""
     ])
   }
 }
@@ -250,6 +261,7 @@ resource "aws_cloudwatch_log_group" "service_log_group" {
 }
 
 module "database" {
+  count = var.create_database ? 1 : 0
   source = "../database"
 
   environment               = var.environment
@@ -284,16 +296,7 @@ resource "aws_ecs_task_definition" "task_definition" {
           containerPort = local.service_port
         }
       ]
-      secrets = [
-        {
-          name      = "DATABASE_URL"
-          valueFrom = "${module.database.urls_arn}:url::"
-        },
-        {
-          name      = "READ_ONLY_DATABASE_URL"
-          valueFrom = "${module.database.urls_arn}:reader_url::"
-        },
-      ]
+      secrets = local.db_secrets
       environment = [
         {
           name  = "NODE_OPTIONS"
