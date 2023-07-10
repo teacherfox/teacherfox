@@ -134,7 +134,7 @@ resource "aws_lb_target_group" "lb_target_group" {
 resource "aws_route53_record" "domain_record" {
   for_each = toset(["A", "AAAA"])
   zone_id  = var.domain_zone_id
-  name     = "api.${var.domain_name}"
+  name     = var.route53_endpoint != "" ? "${var.route53_endpoint}.${var.domain_name}" : var.domain_name
   type     = each.key
 
   alias {
@@ -415,7 +415,7 @@ data "aws_iam_policy_document" "github_operating" {
 }
 
 resource "aws_iam_policy" "ecs_deploying_policy" {
-  name   = "${var.environment}-github-operating"
+  name   = "${local.name}-github-operating"
   policy = data.aws_iam_policy_document.github_operating.json
 }
 

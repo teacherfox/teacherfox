@@ -57,3 +57,7 @@ variable "min_instances" {
 variable "max_instances" {
   type = number
 }
+
+variable "route53_endpoint" {
+  type = string
+}
