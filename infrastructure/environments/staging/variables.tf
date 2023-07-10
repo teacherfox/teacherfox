@@ -7,3 +7,7 @@ variable "environment" {
   type = string
   default = "staging"
 }
+
+variable "personal_token" {
+  type = string
+}

@@ -1,6 +1,6 @@
 locals {
-  organization        = "teacherfox"
-  workspace           = "${local.organization}-${var.environment}"
+  organization = "teacherfox"
+  workspace    = "${local.organization}-${var.environment}"
 }
 
 variable "default_tags" {
@@ -110,4 +110,13 @@ module "ses" {
   domain      = module.route53.domain_name
   environment = var.environment
   zone_id     = module.route53.zone_id
+}
+
+module "frontend" {
+  source = "../../modules/frontend"
+
+  domain_name    = module.route53.domain_name
+  environment    = var.environment
+  personal_token = var.personal_token
+  repository     = "https://github.com/teacherfox/teacherfox"
 }
