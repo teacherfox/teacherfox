@@ -1,5 +1,7 @@
-import { JwtPayload, verify } from 'jsonwebtoken';
+import pkg, { JwtPayload } from 'jsonwebtoken';
 import { APP_SECRET } from './config/config.js';
+
+const { verify } = pkg;
 
 export const authenticateUser = async (request: Request): Promise<string | null> => {
   const header = request.headers.get('authorization');
