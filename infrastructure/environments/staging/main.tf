@@ -98,3 +98,11 @@ module "cluster" {
   service_subnet_ids = module.vpc.private_subnet_ids
   vpc_id = module.vpc.id
 }
+
+module "frontend" {
+  source = "../../modules/frontend"
+
+  environment = var.environment
+  personal_token = var.personal_token
+  repository = "https://github.com/teacherfox/teacherfox"
+}
