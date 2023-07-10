@@ -21,7 +21,7 @@ const schema = yup
         "Please enter your full name."
       ),
     email: yup.string().email().required(),
-    phone: yup.string().matches(phoneRegExp, "Phone number is not valid"),
+    phone: yup.string().matches(phoneRegExp, "Phone number is not valid").defined().nullable(),
     message: yup.string().required(),
   })
   .required();

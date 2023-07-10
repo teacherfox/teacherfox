@@ -3,6 +3,8 @@
   "display": "Next.js",
   "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
+    "noImplicitAny": false,
+    "preserveSymlinks": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -22,6 +24,7 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".", // This must be specified if "paths" is.
     "paths": {
       "@/*": ["./src/*"],
       "@/api/*": ["./src/api/*"],
