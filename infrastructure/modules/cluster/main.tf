@@ -26,6 +26,7 @@ module "server" {
   lb_subnet_ids = var.lb_subnet_ids
   min_instances = var.environment == "production" ? 2 : 1
   max_instances = 10
+  route53_endpoint = "api"
   service_name = "server"
   service_subnet_ids = var.service_subnet_ids
   vpc_id = var.vpc_id
