@@ -85,20 +85,32 @@ builder.mutationFields((t) => ({
       return { token, user };
     },
   }),
-  updateUser: t
-    .withAuth({ authenticated: true })
-    .field({
-    type: 'Boolean',
+  updateUser: t.withAuth({ authenticated: true }).prismaField({
+    type: 'User',
     args: {
       name: t.arg.string(),
     },
     validate: (args) => updateUserSchema.parse(args) && true,
-    resolve: async (root, args, ctx, _info) => {
+    resolve: async (query, root, args, ctx, _info) =>
       await prisma.user.update({
+        ...query,
         where: { id: ctx.currentUserId },
         data: args as z.infer<typeof updateUserSchema>,
-      });
-      return true
+      }),
+  }),
+  forgetPassword: t.field({
+    type: 'Boolean',
+    args: {
+      email: t.arg.string({ required: true }),
     },
+    resolve: async (root, args, _ctx, _info) => {
+      const user = await readOnlyPrisma.user.findUnique({
+        where: { email: args.email },
+      });
+      if (!user) {
+        throw new GraphQLError('No user with such email');
+      }
+      return true;
+    }
   }),
 }));
