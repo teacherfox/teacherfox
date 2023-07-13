@@ -1,4 +1,4 @@
-import { builder, prisma } from '../builder.js';
+import { builder, prisma, readOnlyPrisma } from "../builder.js";
 import { PostDto } from '../types.js';
 import { Post } from '../../.prisma';
 import { pubSub } from '../pubsub.js';
@@ -10,7 +10,7 @@ builder.queryFields((t) => ({
     },
     type: 'Post',
     resolve: async (query, root, args, _ctx, _info) =>
-      prisma.post.findUniqueOrThrow({
+      readOnlyPrisma.post.findUniqueOrThrow({
         ...query,
         where: { id: args.postId },
       }),
@@ -18,9 +18,9 @@ builder.queryFields((t) => ({
   feed: t.prismaConnection({
     type: 'Post',
     cursor: 'id',
-    totalCount: async (_connection, _args, _ctx, _info) => await prisma.post.count(),
+    totalCount: async (_connection, _args, _ctx, _info) => await readOnlyPrisma.post.count(),
     resolve: async (query, root, _args, _ctx, _info) =>
-      await prisma.post.findMany({
+      await readOnlyPrisma.post.findMany({
         ...query,
       }),
   }),

@@ -1,7 +1,8 @@
-import { builder, prisma } from '../builder.js';
+import { builder, prisma, readOnlyPrisma } from "../builder.js";
 import { VoteDto } from '../types.js';
 import { pubSub } from '../pubsub.js';
 import { Vote } from '../../.prisma';
+import { GraphQLError } from 'graphql';
 
 builder.queryFields((t) => ({
   votes: t.prismaField({
@@ -10,7 +11,7 @@ builder.queryFields((t) => ({
       postId: t.arg.string({ required: true }),
     },
     resolve: async (query, root, args, _ctx, _info) =>
-      prisma.vote.findMany({
+      readOnlyPrisma.vote.findMany({
         ...query,
         where: { postId: args.postId },
       }),
@@ -24,13 +25,13 @@ builder.mutationFields((t) => ({
       postId: t.arg.string({ required: true }),
     },
     resolve: async (root, args, ctx, _info) => {
-      const existingVote = await prisma.vote.findUnique({
+      const existingVote = await readOnlyPrisma.vote.findUnique({
         where: {
           postId_userId: { postId: args.postId, userId: ctx.currentUserId },
         },
       });
       if (existingVote) {
-        throw new Error(`Already voted for post: ${args.postId}`);
+        throw new GraphQLError(`Already voted for post: ${args.postId}`);
       }
       const newVote = await prisma.vote.create({
         data: { ...args, userId: ctx.currentUserId },

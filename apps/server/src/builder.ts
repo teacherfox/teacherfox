@@ -1,4 +1,5 @@
 import SchemaBuilder from '@pothos/core';
+import ValidationPlugin from '@pothos/plugin-validation';
 import { PrismaClient } from '../.prisma/index.js';
 import PrismaPlugin from '@pothos/plugin-prisma';
 // This is the default location for the generator, but this can be
@@ -11,8 +12,16 @@ import { DateTimeResolver } from 'graphql-scalars';
 import ScopeAuthPlugin from '@pothos/plugin-scope-auth';
 import RelayPlugin from '@pothos/plugin-relay';
 import { GraphQLContext } from './context.js';
+import { GraphQLError } from "graphql";
 
 export const prisma = new PrismaClient({});
+export const readOnlyPrisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.READ_ONLY_DATABASE_URL ?? process.env.DATABASE_URL
+    }
+  }
+});
 
 interface AuthenticatedContext extends GraphQLContext {
   currentUserId: NonNullable<GraphQLContext['currentUserId']>;
@@ -34,7 +43,7 @@ export const builder = new SchemaBuilder<{
     authenticated: AuthenticatedContext;
   };
 }>({
-  plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin, SimpleObjectsPlugin],
+  plugins: [ScopeAuthPlugin, PrismaPlugin, RelayPlugin, SimpleObjectsPlugin, ValidationPlugin],
   prisma: {
     client: prisma,
     // defaults to false, uses /// comments from prisma schema as descriptions
@@ -56,6 +65,13 @@ export const builder = new SchemaBuilder<{
     // These will become the defaults in the next major version
     clientMutationId: 'omit',
     cursorType: 'ID',
+  },
+  validationOptions: {
+    // optionally customize how errors are formatted
+    validationError: (zodError, _args, _context, _info) => {
+      // the default behavior is to just throw the zod error directly
+      return new GraphQLError(zodError.issues.map((issue) => issue.message).join('\n'));
+    },
   },
 });
 

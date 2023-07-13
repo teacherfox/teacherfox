@@ -275,6 +275,11 @@ module "database" {
   vpc_id                    = var.vpc_id
 }
 
+resource "aws_secretsmanager_secret" "server_secret" {
+  for_each = var.secrets
+  name     = "/${var.environment}/${var.service_name}/${each.key}"
+}
+
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = local.name
   requires_compatibilities = ["FARGATE"]
@@ -296,8 +301,13 @@ resource "aws_ecs_task_definition" "task_definition" {
           containerPort = local.service_port
         }
       ]
-      secrets = local.db_secrets
-      environment = [
+      secrets = concat(local.db_secrets, [
+        for k, v in aws_secretsmanager_secret.server_secret : {
+          name      = upper(k)
+          valueFrom = v.arn
+        }
+      ])
+      environment = concat([
         {
           name  = "NODE_OPTIONS"
           value = "--max-old-space-size=${floor(local.service_memory * 0.8)}"
@@ -318,7 +328,12 @@ resource "aws_ecs_task_definition" "task_definition" {
           name  = "MODE"
           value = var.environment
         }
-      ],
+      ], [
+        for k, v in var.environment_variables : {
+          name  = k
+          value = v
+        }
+      ]),
       logConfiguration = {
         logDriver = "awslogs"
         options   = {

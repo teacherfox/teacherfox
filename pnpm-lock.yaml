@@ -87,6 +87,9 @@ importers:
       '@pothos/plugin-simple-objects':
         specifier: ^3.7.0
         version: 3.7.0(@pothos/core@3.30.0)(graphql@16.7.1)
+      '@pothos/plugin-validation':
+        specifier: ^3.9.2
+        version: 3.9.2(@pothos/core@3.30.0)(graphql@16.7.1)(zod@3.21.4)
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -108,6 +111,9 @@ importers:
       prisma:
         specifier: ^4.16.2
         version: 4.16.2
+      zod:
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@babel/core':
         specifier: ^7.22.8
@@ -1913,6 +1919,18 @@ packages:
     dependencies:
       '@pothos/core': 3.30.0(graphql@16.7.1)
       graphql: 16.7.1
+    dev: false
+
+  /@pothos/plugin-validation@3.9.2(@pothos/core@3.30.0)(graphql@16.7.1)(zod@3.21.4):
+    resolution: {integrity: sha512-BOWcjFqCqbzsnMtcywmG39ojlvc9/1nsubNxuhC4pb+Lka9Yw8ET7OF8EmMRY9WfXD+LVyQkhSlBV6b2j9GDJA==}
+    peerDependencies:
+      '@pothos/core': '*'
+      graphql: '>=15.1.0'
+      zod: '*'
+    dependencies:
+      '@pothos/core': 3.30.0(graphql@16.7.1)
+      graphql: 16.7.1
+      zod: 3.21.4
     dev: false
 
   /@prisma/client@4.16.2(prisma@4.16.2):

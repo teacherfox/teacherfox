@@ -1,4 +1,4 @@
-import { builder, prisma } from '../builder.js';
+import { builder, prisma, readOnlyPrisma } from "../builder.js";
 import { pubSub } from '../pubsub.js';
 import { MessageDto } from '../types.js';
 import { Message } from '../../.prisma';
@@ -8,7 +8,7 @@ builder.queryFields((t) => ({
   messages: t.prismaField({
     type: ['Message'],
     resolve: async (query, _root, _args, _ctx, _info) =>
-      prisma.message.findMany({
+      readOnlyPrisma.message.findMany({
         ...query,
       }),
   }),
@@ -73,7 +73,7 @@ builder.subscriptionFields((t) => ({
     type: [MessageDto],
     resolve: async (value: { newMessages: Message[] }) => value.newMessages,
     subscribe: async (root, args, ctx) => {
-      const latestUserMessages = await prisma.message.findMany({
+      const latestUserMessages = await readOnlyPrisma.message.findMany({
         where: {
           receiverId: ctx.currentUserId,
         },
