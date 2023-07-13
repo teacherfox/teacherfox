@@ -22,5 +22,12 @@
       <jdbc-url>jdbc:postgresql://prod-server.cluster-ro-cmdvn6mrqwjx.eu-central-1.rds.amazonaws.com:5432/prod_server</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="staging" uuid="f5f12aaa-076d-417e-87a2-527ecf6a80ce">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://staging-server.cluster-cmdvn6mrqwjx.eu-central-1.rds.amazonaws.com:5432/staging_server</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
