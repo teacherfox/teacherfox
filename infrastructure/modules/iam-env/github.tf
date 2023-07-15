@@ -55,6 +55,6 @@ data "aws_iam_policy_document" "server_task_role_policy_document" {
 }
 
 resource "aws_iam_policy" "server_task_role_policy" {
-  name   = "dev-server-task-role"
+  name   = "${var.environment}-server-task-role-policy"
   policy = data.aws_iam_policy_document.server_task_role_policy_document.json
 }
