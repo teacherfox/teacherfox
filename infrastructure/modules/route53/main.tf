@@ -37,6 +37,15 @@ resource "aws_route53_record" "zoho_verification" {
   records = ["zoho-verification=zb82681392.zmverify.zoho.eu", "v=spf1 include:zoho.eu ~all"]
 }
 
+resource "aws_route53_record" "dmarc_policy" {
+  count   = var.environment == "prod" ? 1 : 0
+  zone_id = aws_route53_zone.teacherfox.zone_id
+  name    = "_dmarc"
+  type    = "TXT"
+  ttl     = "86400"
+  records = ["v=DMARC1; p=none; rua=mailto:tech@${local.domain}}"]
+}
+
 resource "aws_route53_record" "wildcard_records" {
   for_each = {
     for dvo in aws_acm_certificate.wildcard.domain_validation_options : dvo.domain_name => {
