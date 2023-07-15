@@ -12,7 +12,7 @@ interface ForgotPasswordEmailData {
   browser_name: string;
 }
 export const sendForgetPasswordEmail = async (data: ForgotPasswordEmailData) => {
-  await client.send(
+  const command = await client.send(
     new SendTemplatedEmailCommand({
       Destination: {
         ToAddresses: [data.email],
@@ -24,4 +24,5 @@ export const sendForgetPasswordEmail = async (data: ForgotPasswordEmailData) => 
   ).catch((err) => {
     logger.error(err);
   });
+  logger.info(JSON.stringify(command));
 }
