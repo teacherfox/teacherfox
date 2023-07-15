@@ -5,6 +5,8 @@ import { SignUpDto } from '../types.js';
 import { AUTH_SECRET } from '../config/config.js';
 import { GraphQLError } from 'graphql';
 import { z } from 'zod';
+import { randomUUID } from "crypto";
+import { sendForgetPasswordEmail } from "../email.js";
 
 const { sign } = jsonwebtoken;
 const { compare, hash } = bcryptjs;
@@ -110,7 +112,53 @@ builder.mutationFields((t) => ({
       if (!user) {
         throw new GraphQLError('No user with such email');
       }
+      const token = randomUUID();
+      const forgetPassword = await prisma.forgetPassword.upsert({
+        where: { id: user.id },
+        create: { id: user.id, token },
+        update: { token },
+      });
+      await sendForgetPasswordEmail({
+        email: user.email,
+        name: user.name,
+        action_url: `https://teacherfox.com.cy/reset-password?token=${token}`,
+        operating_system: 'to be filled',
+        browser_name: 'to be filled'
+      })
       return true;
     }
   }),
+  resetPassword: t.prismaField({
+    type: 'User',
+    args: {
+      token: t.arg.string({ required: true }),
+      password: t.arg.string({
+        validate: {
+          schema: passwordSchema
+        }
+      }),
+    },
+    resolve: async (query, root, args, _ctx, _info) => {
+      const forgetPassword = await readOnlyPrisma.forgetPassword.findUnique({
+        where: { token: args.token },
+        include: { user: query }
+      });
+      if (!forgetPassword) {
+        throw new GraphQLError('Invalid token');
+      }
+      if (args.password) {
+        const password = await hash(args.password, 10);
+        await prisma.$transaction([
+          prisma.user.update({
+            where: { id: forgetPassword.id },
+            data: { password },
+          }),
+          prisma.forgetPassword.delete({
+            where: { id: forgetPassword.id },
+          }),
+        ]);
+      }
+      return forgetPassword.user;
+    }
+  })
 }));

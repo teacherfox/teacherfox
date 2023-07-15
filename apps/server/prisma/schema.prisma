@@ -13,13 +13,14 @@ generator pothos {
 }
 
 model User {
-  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name             String
-  email            String    @unique
+  email            String          @unique
   password         String
-  messagesSent     Message[] @relation("senderUserRel")
-  messagesReceived Message[] @relation("receiverUserRel")
-  createdAt        DateTime  @default(now()) @map("created_at")
+  messagesSent     Message[]       @relation("senderUserRel")
+  messagesReceived Message[]       @relation("receiverUserRel")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  forgetPassword   ForgetPassword?
 
   @@map("users")
 }
@@ -37,4 +38,14 @@ model Message {
   @@index([receiverId])
   @@index([createdAt(sort: Desc)])
   @@map("messages")
+}
+
+model ForgetPassword {
+  id        String   @id @db.Uuid
+  token     String   @unique @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  user      User     @relation(fields: [id], references: [id])
+
+  @@map("forget_passwords")
 }

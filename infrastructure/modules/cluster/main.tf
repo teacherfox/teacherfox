@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_ecs_cluster" "teacherfox" {
   name = "${var.environment}-${var.organization}"
 
@@ -33,6 +35,7 @@ module "server" {
   vpc_id = var.vpc_id
   secrets = ["auth_secret"]
   environment_variables = {
-    PORT = 4000
+    PORT = 4000,
+    AWS_REGION = data.aws_region.current.name
   }
 }
