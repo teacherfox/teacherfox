@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_ecs_cluster" "teacherfox" {
   name = "${var.environment}-${var.organization}"
 
@@ -23,12 +25,18 @@ module "server" {
   domain_name = var.domain_name
   domain_zone_id = var.domain_zone_id
   environment = var.environment
+  environment_variables = {
+    PORT = 4000,
+    AWS_REGION = data.aws_region.current.name
+  }
   github_role_name = var.github_role_name
   lb_subnet_ids = var.lb_subnet_ids
   min_instances = var.environment == "production" ? 2 : 1
   max_instances = 10
   route53_endpoint = "api"
+  secrets = ["auth_secret"]
   service_name = "server"
   service_subnet_ids = var.service_subnet_ids
+  task_role_policy_arn = var.server_task_role_policy_arn
   vpc_id = var.vpc_id
 }

@@ -1,9 +1,10 @@
-export const APP_SECRET = process.env.APP_SECRET ?? 'this is my secret';
+export const AUTH_SECRET = process.env.AUTH_SECRET ?? '';
+export const AWS_REGION = process.env.AWS_REGION ?? 'eu-central-1';
 export const PORT = Number(process.env.PORT ?? 4000);
 
 export enum Environment {
     production = 'prod',
-    development = 'development',
+    development = 'dev',
     staging = 'staging',
 }
 

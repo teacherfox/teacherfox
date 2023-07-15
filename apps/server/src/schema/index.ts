@@ -1,8 +1,5 @@
 import { builder } from '../builder.js';
-import './postOperations.js';
 import './userOperations.js';
-import './voteOperations.js';
-import './commentOperations.js';
 import './messageOperations.js';
 import '../types.js';
 

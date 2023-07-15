@@ -1,15 +1,28 @@
-import { builder, prisma } from '../builder.js';
+import { builder, prisma, readOnlyPrisma } from "../builder.js";
 import { pubSub } from '../pubsub.js';
 import { MessageDto } from '../types.js';
 import { Message } from '../../.prisma';
 import { filter, map, pipe, Repeater } from '@graphql-yoga/subscription';
 
+function getMessagesWhere<Types>(userId: string) {
+  return {
+    OR: [{ senderId: userId }, { receiverId: userId }],
+  };
+}
+
 builder.queryFields((t) => ({
-  messages: t.prismaField({
-    type: ['Message'],
-    resolve: async (query, _root, _args, _ctx, _info) =>
-      prisma.message.findMany({
+  messages: t.withAuth({ authenticated: true }).prismaConnection({
+    type: 'Message',
+    cursor: 'id',
+    totalCount: async (_connection, _args, ctx, _info) =>
+      await readOnlyPrisma.message.count({ where: getMessagesWhere(ctx.currentUserId) }),
+    resolve: async (query, _root, _args, ctx, _info) =>
+      readOnlyPrisma.message.findMany({
         ...query,
+        where: getMessagesWhere(ctx.currentUserId),
+        orderBy: {
+          createdAt: 'desc',
+        },
       }),
   }),
 }));
@@ -47,12 +60,11 @@ builder.mutationFields((t) => ({
       message: t.arg.string({ required: true }),
       id: t.arg.string({ required: true }),
     },
-    resolve: async (root, args, _ctx, _info) => {
-      return await prisma.message.update({
+    resolve: async (root, args, _ctx, _info) =>
+      await prisma.message.update({
         where: { id: args.id },
         data: { message: args.message },
-      });
-    },
+      }),
   }),
 
   deleteMessage: t.withAuth({ authenticated: true }).field({
@@ -60,11 +72,10 @@ builder.mutationFields((t) => ({
     args: {
       id: t.arg.string({ required: true }),
     },
-    resolve: async (root, args, _ctx, _info) => {
-      return await prisma.message.delete({
+    resolve: async (root, args, _ctx, _info) =>
+      await prisma.message.delete({
         where: { id: args.id },
-      });
-    },
+      }),
   }),
 }));
 
@@ -73,7 +84,7 @@ builder.subscriptionFields((t) => ({
     type: [MessageDto],
     resolve: async (value: { newMessages: Message[] }) => value.newMessages,
     subscribe: async (root, args, ctx) => {
-      const latestUserMessages = await prisma.message.findMany({
+      const latestUserMessages = await readOnlyPrisma.message.findMany({
         where: {
           receiverId: ctx.currentUserId,
         },

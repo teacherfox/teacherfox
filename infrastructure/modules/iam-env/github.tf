@@ -1,7 +1,3 @@
-locals {
-  github_provider_url = "token.actions.githubusercontent.com"
-  github_audience = "sts.amazonaws.com"
-}
 resource "aws_iam_role" "github_role" {
   name        = "${var.environment}-github"
   description = "CI/CD role for deploying ${var.environment} environment"
@@ -21,13 +17,13 @@ data "aws_iam_policy_document" "github_assume_role_policy" {
     }
     condition {
       test     = "StringEquals"
-      values   = [local.github_audience]
-      variable = "${local.github_provider_url}:aud"
+      values   = [var.github_audience]
+      variable = "${var.github_provider_url}:aud"
     }
     condition {
       test     = "StringLike"
       values   = ["repo:${var.organization}/${var.organization}:*"]
-      variable = "${local.github_provider_url}:sub"
+      variable = "${var.github_provider_url}:sub"
     }
   }
 }
@@ -38,36 +34,6 @@ data "aws_iam_policy_document" "services_deploy" {
     effect    = "Allow"
     resources = ["*"]
   }
-
-#  dynamic "statement" {
-#    for_each = toset(length(local.server_ecr_arns) > 0 ? ["a"] : [])
-#
-#    content {
-#      actions   = local.ecr_actions
-#      effect    = "Allow"
-#      resources = local.server_ecr_arns
-#    }
-#  }
-
-#  dynamic "statement" {
-#    for_each = toset(length(local.server_ecs_role_arns) > 0 ? ["a"] : [])
-#
-#    content {
-#      actions   = ["iam:PassRole"]
-#      effect    = "Allow"
-#      resources = local.server_ecs_role_arns
-#    }
-#  }
-#
-#  dynamic "statement" {
-#    for_each = toset(length(local.server_ecs_service_arns) > 0 ? ["a"] : [])
-#
-#    content {
-#      actions   = ["ecs:DeployService", "ecs:DescribeServices", "ecs:UpdateService"]
-#      effect    = "Allow"
-#      resources = local.server_ecs_service_arns
-#    }
-#  }
 }
 
 resource "aws_iam_policy" "service_deploy" {
@@ -78,4 +44,17 @@ resource "aws_iam_policy" "service_deploy" {
 resource "aws_iam_role_policy_attachment" "github_server_deploy" {
   role       = aws_iam_role.github_role.name
   policy_arn = aws_iam_policy.service_deploy.arn
+}
+
+data "aws_iam_policy_document" "server_task_role_policy_document" {
+  statement {
+    actions   = ["ses:SendTemplatedEmail"]
+    effect    = "Allow"
+    resources = [var.ses_identity_arn]
+  }
+}
+
+resource "aws_iam_policy" "server_task_role_policy" {
+  name   = "dev-server-task-role"
+  policy = data.aws_iam_policy_document.server_task_role_policy_document.json
 }

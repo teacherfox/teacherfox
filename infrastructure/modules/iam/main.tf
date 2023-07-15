@@ -1,9 +1,9 @@
 locals {
-  users          = []
-  developers     = ["nikos", "giorgos"]
-  administrators = ["giorgos"]
+  users               = []
+  developers          = ["nikos", "giorgos"]
+  administrators      = ["giorgos"]
   github_provider_url = "token.actions.githubusercontent.com"
-  github_audience = "sts.amazonaws.com"
+  github_audience     = "sts.amazonaws.com"
 }
 
 data "aws_caller_identity" "current" {}
@@ -118,7 +118,7 @@ resource "aws_iam_policy" "user_bare_policy" {
           "iam:DeleteVirtualMFADevice",
           "sts:GetSessionToken"
         ]
-        Resource = "*",
+        Resource  = "*",
         Condition = {
           BoolIfExists : {
             "aws:MultiFactorAuthPresent" : "false"
@@ -192,8 +192,8 @@ resource "aws_iam_policy" "developer_policy" {
 }
 
 resource "aws_iam_role" "developer_role" {
-  name        = "developer"
-  description = "View access in all services, write access in non production services"
+  name                 = "developer"
+  description          = "View access in all services, write access in non production services"
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.instance_assume_role_policy.json
 }
@@ -201,6 +201,11 @@ resource "aws_iam_role" "developer_role" {
 resource "aws_iam_role_policy_attachment" "developer_policy_attach" {
   role       = aws_iam_role.developer_role.name
   policy_arn = aws_iam_policy.developer_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "server_policy_attach" {
+  role       = aws_iam_role.developer_role.name
+  policy_arn = var.server_task_role_policy_arn
 }
 
 resource "aws_iam_policy" "developer_assume_policy" {

@@ -65,3 +65,15 @@ variable "route53_endpoint" {
 variable "create_database" {
   type = bool
 }
+
+variable "secrets" {
+  type = set(string)
+}
+
+variable "environment_variables" {
+  type = map(string)
+}
+
+variable "task_role_policy_arn" {
+  type = string
+}
