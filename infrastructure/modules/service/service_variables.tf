@@ -74,6 +74,6 @@ variable "environment_variables" {
   type = map(string)
 }
 
-variable "ses_identity_arn" {
+variable "task_role_policy_arn" {
   type = string
 }

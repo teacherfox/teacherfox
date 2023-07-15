@@ -48,8 +48,11 @@ provider "aws" {
 module "iam_env" {
   source                             = "../../modules/iam-env"
   environment                        = var.environment
-  organization                       = local.organization
+  github_audience                    = data.tfe_outputs.prod_outputs.values.github_audience
   github_openid_connect_provider_arn = data.tfe_outputs.prod_outputs.values.github_openid_connect_provider_arn
+  github_provider_url                = data.tfe_outputs.prod_outputs.values.github_provider_url
+  organization                       = local.organization
+  ses_identity_arn                   = module.ses.identity_arn
 }
 
 module "route53" {
@@ -85,19 +88,19 @@ module "bastion" {
 }
 
 module "cluster" {
-  source                    = "../../modules/cluster"
-  bastion_security_group_id = module.bastion.security_group_id
-  certificate_arn           = module.route53.wildcard_certificate_arn
-  database_subnet_ids       = module.vpc.database_subnet_ids
-  domain_name               = module.route53.domain_name
-  domain_zone_id            = module.route53.zone_id
-  environment               = var.environment
-  github_role_name          = module.iam_env.github_role_name
-  lb_subnet_ids             = module.vpc.public_subnet_ids
-  organization              = local.organization
-  service_subnet_ids        = module.vpc.private_subnet_ids
-  ses_identity_arn          = module.ses.identity_arn
-  vpc_id                    = module.vpc.id
+  source                      = "../../modules/cluster"
+  bastion_security_group_id   = module.bastion.security_group_id
+  certificate_arn             = module.route53.wildcard_certificate_arn
+  database_subnet_ids         = module.vpc.database_subnet_ids
+  domain_name                 = module.route53.domain_name
+  domain_zone_id              = module.route53.zone_id
+  environment                 = var.environment
+  github_role_name            = module.iam_env.github_role_name
+  lb_subnet_ids               = module.vpc.public_subnet_ids
+  organization                = local.organization
+  server_task_role_policy_arn = module.iam_env.server_task_role_policy_arn
+  service_subnet_ids          = module.vpc.private_subnet_ids
+  vpc_id                      = module.vpc.id
 }
 
 module "ses" {

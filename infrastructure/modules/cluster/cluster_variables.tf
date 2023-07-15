@@ -42,6 +42,6 @@ variable "domain_name" {
   type = string
 }
 
-variable "ses_identity_arn" {
+variable "server_task_role_policy_arn" {
   type = string
 }

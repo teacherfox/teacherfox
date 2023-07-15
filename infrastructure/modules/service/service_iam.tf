@@ -89,20 +89,7 @@ resource "aws_iam_role_policy_attachment" "github_operating" {
   policy_arn = aws_iam_policy.ecs_deploying_policy.arn
 }
 
-data "aws_iam_policy_document" "task_role_policy_document" {
-  statement {
-    actions   = ["ses:SendTemplatedEmail"]
-    effect    = "Allow"
-    resources = [var.ses_identity_arn]
-  }
-}
-
-resource "aws_iam_policy" "task_role_policy" {
-  name   = "${local.name}-task-role"
-  policy = data.aws_iam_policy_document.task_role_policy_document.json
-}
-
 resource "aws_iam_role_policy_attachment" "task_role_attachment" {
   role       = aws_iam_role.task_role.name
-  policy_arn = aws_iam_policy.task_role_policy.arn
+  policy_arn = var.task_role_policy_arn
 }

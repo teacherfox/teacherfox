@@ -34,9 +34,9 @@ module "server" {
   min_instances = var.environment == "production" ? 2 : 1
   max_instances = 10
   route53_endpoint = "api"
+  secrets = ["auth_secret"]
   service_name = "server"
   service_subnet_ids = var.service_subnet_ids
-  ses_identity_arn = var.ses_identity_arn
+  task_role_policy_arn = var.server_task_role_policy_arn
   vpc_id = var.vpc_id
-  secrets = ["auth_secret"]
 }

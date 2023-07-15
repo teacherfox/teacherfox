@@ -11,6 +11,6 @@ variable "project" {
   default = "Default Project"
 }
 
-variable "task_role_policies_arn" {
-  type = list(string)
+variable "server_task_role_policy_arn" {
+  type = string
 }
