@@ -4,7 +4,7 @@ export const PORT = Number(process.env.PORT ?? 4000);
 
 export enum Environment {
     production = 'prod',
-    development = 'development',
+    development = 'dev',
     staging = 'staging',
 }
 

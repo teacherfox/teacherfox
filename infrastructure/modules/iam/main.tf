@@ -232,6 +232,12 @@ resource "aws_iam_group_policy_attachment" "developers_assume_policy_attach" {
   policy_arn = aws_iam_policy.developer_assume_policy.arn
 }
 
+resource "aws_iam_group_policy_attachment" "developers_task_roles_attachments" {
+  for_each = toset(var.task_role_policies_arn)
+  group      = aws_iam_group.developers_group.name
+  policy_arn = each.key
+}
+
 resource "aws_iam_user_group_membership" "developers_membership" {
   for_each = toset(local.developers)
   user     = each.key

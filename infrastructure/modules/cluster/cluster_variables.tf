@@ -41,3 +41,7 @@ variable "domain_zone_id" {
 variable "domain_name" {
   type = string
 }
+
+variable "ses_identity_arn" {
+  type = string
+}

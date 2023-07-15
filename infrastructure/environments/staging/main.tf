@@ -96,12 +96,13 @@ module "cluster" {
   lb_subnet_ids             = module.vpc.public_subnet_ids
   organization              = local.organization
   service_subnet_ids        = module.vpc.private_subnet_ids
+  ses_identity_arn          = module.ses.identity_arn
   vpc_id                    = module.vpc.id
 }
 
 module "ses" {
   source      = "../../modules/ses"
-  domain = module.route53.domain_name
+  domain      = module.route53.domain_name
   environment = var.environment
-  zone_id = module.route53.zone_id
+  zone_id     = module.route53.zone_id
 }

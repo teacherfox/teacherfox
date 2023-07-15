@@ -73,3 +73,7 @@ variable "secrets" {
 variable "environment_variables" {
   type = map(string)
 }
+
+variable "ses_identity_arn" {
+  type = string
+}

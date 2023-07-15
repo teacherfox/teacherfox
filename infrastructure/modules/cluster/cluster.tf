@@ -25,6 +25,10 @@ module "server" {
   domain_name = var.domain_name
   domain_zone_id = var.domain_zone_id
   environment = var.environment
+  environment_variables = {
+    PORT = 4000,
+    AWS_REGION = data.aws_region.current.name
+  }
   github_role_name = var.github_role_name
   lb_subnet_ids = var.lb_subnet_ids
   min_instances = var.environment == "production" ? 2 : 1
@@ -32,10 +36,7 @@ module "server" {
   route53_endpoint = "api"
   service_name = "server"
   service_subnet_ids = var.service_subnet_ids
+  ses_identity_arn = var.ses_identity_arn
   vpc_id = var.vpc_id
   secrets = ["auth_secret"]
-  environment_variables = {
-    PORT = 4000,
-    AWS_REGION = data.aws_region.current.name
-  }
 }
