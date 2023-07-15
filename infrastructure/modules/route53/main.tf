@@ -43,7 +43,7 @@ resource "aws_route53_record" "dmarc_policy" {
   name    = "_dmarc"
   type    = "TXT"
   ttl     = "86400"
-  records = ["v=DMARC1; p=none; rua=mailto:tech@${local.domain}"]
+  records = ["v=DMARC1; p=quarantine; rua=mailto:tech@${local.domain}"]
 }
 
 resource "aws_route53_record" "wildcard_records" {
