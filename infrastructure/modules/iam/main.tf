@@ -7,6 +7,7 @@ locals {
 }
 
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 resource "aws_iam_policy" "user_bare_policy" {
   name        = "UserBare"
@@ -20,10 +21,19 @@ resource "aws_iam_policy" "user_bare_policy" {
         Sid : "AllowViewAccountInfo"
         Effect : "Allow",
         Action = [
+          "iam:GetAccountPasswordPolicy",
+          "iam:ListVirtualMFADevices"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid : "AllowManageOwnPasswords"
+        Effect : "Allow",
+        Action = [
           "iam:ChangePassword",
           "iam:GetUser"
         ]
-        Resource = "*"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
       },
       {
         Sid : "AllowManageOwnAccessKeys"
@@ -81,6 +91,17 @@ resource "aws_iam_policy" "user_bare_policy" {
         ]
       },
       {
+        Sid : "AllowManageOwnVirtualMFADevice"
+        Effect : "Allow",
+        Action = [
+          "iam:CreateVirtualMFADevice",
+          "iam:DeleteVirtualMFADevice"
+        ]
+        Resource = [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*"
+        ]
+      },
+      {
         Sid : "AllowManageOwnUserMFA"
         Effect : "Allow",
         Action = [
@@ -91,18 +112,7 @@ resource "aws_iam_policy" "user_bare_policy" {
           "iam:ResyncMFADevice"
         ]
         Resource = [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}"
-        ]
-      },
-      {
-        Sid : "AllowManageOwnVirtualMFADevice"
-        Effect : "Allow",
-        Action = [
-          "iam:CreateVirtualMFADevice",
-          "iam:DeleteVirtualMFADevice"
-        ]
-        Resource = [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*"
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
         ]
       },
       {
@@ -183,7 +193,10 @@ resource "aws_iam_policy" "developer_policy" {
           "ecr:Get*",
           "ecr:BatchGet*",
           "ecr:BatchCheck*",
-          "ecr:Describe*"
+          "ecr:Describe*",
+          "ecs:List*",
+          "ecs:Get*",
+          "ecs:Describe*",
         ]
         Resource = "*"
       },

@@ -27,7 +27,6 @@ module "server" {
   environment = var.environment
   environment_variables = {
     PORT = 4000,
-    AWS_REGION = data.aws_region.current.name
   }
   github_role_name = var.github_role_name
   lb_subnet_ids = var.lb_subnet_ids
