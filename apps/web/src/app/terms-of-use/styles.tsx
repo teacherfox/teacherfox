@@ -14,6 +14,5 @@ export const TermsOfUseWrapper = styled("main")(
       fontFamily: "Open Sans",
       color: Colors.text.header2,
     },
-    
   })
 );

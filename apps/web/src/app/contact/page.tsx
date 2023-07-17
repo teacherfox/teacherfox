@@ -21,7 +21,7 @@ function page({}: Props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <h3>Στοιχεία Επικοινωνίας</h3>
-              <p>Email : <a href="mailto:info@teacherfox.com">info@teacherfox.com</a></p>
+              <p>Email : <a href="mailto:info@teacherfox.com.cy">info@teacherfox.com.cy</a></p>
               <p>Tηλέφωνο : <a href="tel:+35799264445">+357 99264445</a></p>
             </Grid>
           </Grid>

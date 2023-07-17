@@ -15,6 +15,7 @@ type QuestionType = {
   action: string;
 };
 
+// TODO: generate these from the BE
 const QuestionsList: QuestionType[] = [
   {
     question: "Πώς δουλεύει το TeacherFox;",

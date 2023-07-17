@@ -6,7 +6,7 @@ import PrismaPlugin from '@pothos/plugin-prisma';
 // customized as described above.
 // Using a type only import will help avoid issues with undeclared
 // exports in esm mode
-import type PrismaTypes from '@pothos/plugin-prisma/generated.js';
+import PrismaTypes from '@pothos/plugin-prisma/generated.js';
 import SimpleObjectsPlugin from '@pothos/plugin-simple-objects';
 import { DateTimeResolver } from 'graphql-scalars';
 import ScopeAuthPlugin from '@pothos/plugin-scope-auth';

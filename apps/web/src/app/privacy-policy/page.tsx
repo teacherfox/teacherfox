@@ -801,7 +801,7 @@ function page({}: Props) {
                   <p>&nbsp;</p>
                   <p>
                     Μπορείτε να ασκήσετε τα δικαιώματά σας αποστέλλοντας email
-                    στο info@teacherfox.com.
+                    στο info@teacherfox.com.cy.
                   </p>
                   <p>&nbsp;</p>
                   <p>

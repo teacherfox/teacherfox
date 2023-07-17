@@ -40,8 +40,3 @@ export const NavbarAuthButtonsContainer = styled("div")(
     marginLeft: ["0px", "10px", "10px", "10px", "0px"],
   })
 );
-
-// export const NavbarContainer = styled(Container)(
-//   ({ theme }) => ({ height: "100%" }),
-//   mq({ maxWidth: ["400px", "500px", "1300px"] })
-// );

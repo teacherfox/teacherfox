@@ -28,14 +28,6 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 
 const ContactForm = () => {
-  //   const { control, handleSubmit } = useForm({
-  //     defaultValues: {
-  //       fullName: "",
-  //       email: "",
-  //       phone: "",
-  //       message: "",
-  //     },
-  //   });
   const {
     control,
     handleSubmit,
@@ -48,12 +40,6 @@ const ContactForm = () => {
   React.useEffect(() => {
     console.log("errors", errors);
   }, [errors]);
-
-  //   const TextField = styled(MuiTextField)`
-  //   .MuiFormHelperText-root.Mui-error {
-  //     color: red;
-  //   }
-  // `;
 
   const TextField = styled(MuiTextField)`
     label.Mui-focused {
@@ -84,7 +70,6 @@ const ContactForm = () => {
               variant="outlined"
               label="Ονοματεπώνυμο"
               fullWidth
-              //   helperText={errors.fullName ? errors.fullName.message : null}
             />
             <p style={{ marginTop: "0px", marginBottom: "0px" }}>
               {errors.fullName ? errors.fullName.message : null}

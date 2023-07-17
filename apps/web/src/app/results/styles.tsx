@@ -23,13 +23,6 @@ export const ResultsWrapper = styled("main")(({ theme }) => ({
 
 export const UserCardWrapper = styled(Box)(
   ({ theme }) => ({
-    //   backgroundColor: Colors.background.lightGrey,
-    // "& > div": {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
-    // paddingTop: "30px",
     marginΤοp: "50px",
     fontFamily: "Open Sans",
     "h2, h4, h5, p": {
@@ -70,20 +63,5 @@ export const UserCardWrapper = styled(Box)(
     ".lessons-title": {
       fontSize: "16px",
     },
-    // paddingBottom: "50px",
-    // hr: {
-    //   backgroundColor: Colors.primary.vivid,
-    //   height: "6px",
-    //   opacity: 0.25,
-    //   marginBottom: "20px",
-    //   margingLeft: "20px",
-    //   transform: "translateX(20px)",
-    // },
   })
-  //   mq({
-  //     marginTop: ["0px", "0px", "-50px"],
-  //     "& > div": {
-  //       flexDirection: ["column", "column", "row"],
-  //     },
-  //   })
 );

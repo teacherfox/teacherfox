@@ -6,6 +6,7 @@ import { TermsOfUseWrapper } from "./styles";
 
 type Props = {};
 
+// TODO: provide this from the BE
 function page({}: Props) {
   return (
     <>
@@ -119,7 +120,7 @@ function page({}: Props) {
                     Σε περίπτωση ωστόσο που οι Χρήστες επιθυμούν κάποια
                     διευκρίνιση ή πληροφορία αναφορικά με τους παρόντες Γενικούς
                     Όρους Χρήσης, μπορούν να επικοινωνήσουν μαζί μας στο
-                    info@teacherfox.com.
+                    info@teacherfox.com.cy.
                   </p>
                   <p>
                     Οποιαδήποτε ενέργεια, χρήση ή συναλλαγή των Χρηστών στην
@@ -814,7 +815,7 @@ function page({}: Props) {
                     εκεί. Σε περίπτωση που ο Χρήστης δεν επιθυμεί να λαμβάνει
                     πλέον ενημερωτικά newsletters, μπορεί να ενημερώσει σχετικά
                     την Εταιρεία αποστέλλοντας σχετικό μήνυμα στο{" "}
-                    <a href="mailto:info@teacherfox.com">info@teacherfox.com</a>{" "}
+                    <a href="mailto:info@teacherfox.com.cy">info@teacherfox.com.cy</a>{" "}
                     ή μέσω του αντίστοιχου συνδέσμου (unsubscribe) που
                     εμφανίζεται στα ενημερωτικά emails μας που λαμβάνει.
                   </p>

@@ -8,7 +8,6 @@ function Reviews() {
       <Box textAlign="center" mb={5}>
         <h4>Κριτικές Μαθητών</h4>
       </Box>
-      {/* <Container maxWidth="md"> */}
       <Box
         sx={{
           textAlign: "center",
@@ -32,7 +31,6 @@ function Reviews() {
           </Box>
         </Paper>
       </Box>
-      {/* </Container> */}
     </ReviewsSection>
   );
 }

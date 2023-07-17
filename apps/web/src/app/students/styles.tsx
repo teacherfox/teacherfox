@@ -6,11 +6,6 @@ import { Container, AppBar, Box } from "@/configs/mui";
 
 export const StudentsWrapper = styled("div")(
   ({ theme }) => ({
-    // "& > div": {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
     paddingTop: "50px",
     marginΤοp: "50px",
     fontFamily: "Open Sans",
@@ -37,32 +32,12 @@ export const StudentsWrapper = styled("div")(
       fontSize: "16px",
       color: Colors.text.paragraph3,
     },
-    // paddingBottom: "50px",
-    // hr: {
-    //   backgroundColor: Colors.primary.vivid,
-    //   height: "6px",
-    //   opacity: 0.25,
-    //   marginBottom: "20px",
-    //   margingLeft: "20px",
-    //   transform: "translateX(20px)",
-    // },
   })
-  //   mq({
-  //     marginTop: ["0px", "0px", "-50px"],
-  //     "& > div": {
-  //       flexDirection: ["column", "column", "row"],
-  //     },
-  //   })
 );
 
 export const ReviewsSection = styled(Box)(
   ({ theme }) => ({
     backgroundColor: Colors.background.lightGrey,
-    // "& > div": {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
     paddingTop: "30px",
     marginΤοp: "50px",
     fontFamily: "Open Sans",
@@ -91,20 +66,5 @@ export const ReviewsSection = styled(Box)(
       color: Colors.text.paragraph3,
       marginBottom: "0px",
     },
-    // paddingBottom: "50px",
-    // hr: {
-    //   backgroundColor: Colors.primary.vivid,
-    //   height: "6px",
-    //   opacity: 0.25,
-    //   marginBottom: "20px",
-    //   margingLeft: "20px",
-    //   transform: "translateX(20px)",
-    // },
   })
-  //   mq({
-  //     marginTop: ["0px", "0px", "-50px"],
-  //     "& > div": {
-  //       flexDirection: ["column", "column", "row"],
-  //     },
-  //   })
 );

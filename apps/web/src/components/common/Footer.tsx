@@ -24,7 +24,7 @@ const FooterSections: IFooterSection[] = [
     title: "Επικοινωνία",
     links: [
       { name: "+357 99264445", url: "tel:+357 99264445" },
-      { name: "info@teacherfox.com", url: "mailto:info@teacherfox.com" },
+      { name: "info@teacherfox.com.cy", url: "mailto:info@teacherfox.com.cy" },
     ],
   },
   {

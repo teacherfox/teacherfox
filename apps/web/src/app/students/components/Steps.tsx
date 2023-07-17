@@ -10,6 +10,7 @@ type StepType = {
   image: string;
 };
 
+// TODO: generate these from the BE
 const StepsList: StepType[] = [
   {
     title: "Βήμα 1",

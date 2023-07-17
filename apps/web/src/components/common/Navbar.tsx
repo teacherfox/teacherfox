@@ -1,199 +1,255 @@
 "use client";
-import React from "react";
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Menu,
-  Container,
-  MenuItem,
-  Tooltip,
-  Avatar,
-} from "@/configs/mui";
-import { MenuIcon } from "@/configs/mui-icons";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import theme from "@/configs/theme";
-import { NavbarStyled, NavbarContainer } from "./styles/navbar";
+import styled from "@emotion/styled";
+import {
+  Box,
+  Tooltip,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  Divider,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper
+} from "@/configs/mui";
+import Link from "next/link";
+import { TFButtonPrimary, TFButtonSecondary } from "@/elements/TFButton";
+import { Colors } from "@/configs/theme";
+import UserAvatar from "@/elements/UserAvatar";
+import { MenuIcon, LoginIcon, InboxIcon } from "@/configs/mui-icons";
+import Image from "next/image";
+import {
+  Logo,
+  NavbarContainer,
+  NavbarAuthButtonsContainer,
+} from "./styles/navbar";
 
-const pages = ["Αρχική", "Μαθήματα", "Πώς Λειτουργεί"];
+type INavlink = {
+  name: string;
+  url: string;
+};
+
+const pages: INavlink[] = [
+  { name: "Αρχική", url: "/" },
+  { name: "Μαθήματα", url: "/all-lessons" },
+  { name: "Πώς Λειτουργεί", url: "/students" },
+];
 const discover = [""];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const authButtons = ["Είμαι Εκπαιδευτικός", "Σύνδεση / Εγγραφή"];
 
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+type Props = {};
+
+const AuthButtons = (logedIn: any): JSX.Element => {
+  return (
+    <NavbarAuthButtonsContainer>
+      <Link href={"/teachers"}>
+        <Box mr={5}>
+          <TFButtonPrimary>Είμαι Εκπαιδευτικός</TFButtonPrimary>
+        </Box>
+      </Link>
+      {logedIn ? (
+        <Link href={"/authentication"}>
+          <TFButtonSecondary>Σύνδεση / Εγγραφή</TFButtonSecondary>
+        </Link>
+      ) : (
+        <UserAvatar menu={settings} />
+      )}
+    </NavbarAuthButtonsContainer>
   );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
+};
+
+const NavbarLinks = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      {pages.map((page, index) => (
+        <Box
+          sx={{
+            a: {
+              fontFamily: "Open Sans",
+              textDecoration: "none",
+              color: Colors.text.navbar,
+              fontWeight: "bold",
+              fontSize: "15px",
+              transition: ".35s",
+              "&:hover": {
+                color: Colors.text.navbarHover,
+              },
+            },
+          }}
+          key={index}
+        >
+          <Link href={page.url}>
+            <Box mr={5}>{page.name}</Box>
+          </Link>
+        </Box>
+      ))}
+    </Box>
   );
+};
+
+const list = (handleCloseNavMenu: any, logedIn: any) => (
+  <Box
+    sx={{ width: "auto" }}
+    role="presentation"
+    onClick={handleCloseNavMenu}
+    onKeyDown={handleCloseNavMenu}
+  >
+    <Box textAlign="center" mt={5}>
+      <Link href="/">
+        <Image
+          src="/images/logo.png"
+          width="150"
+          height="40"
+          alt="teacherfox-logo"
+        />
+      </Link>
+    </Box>
+    <List>
+      {pages.map((pageItem, index) => (
+        <Box
+          key={index}
+          sx={{
+            a: {
+              textDecoration: "none",
+              color: Colors.text.navbar,
+              fontWeight: "bold",
+              fontSize: "15px",
+              transition: ".35s",
+              "&:hover": {
+                color: Colors.text.navbarHover,
+              },
+            },
+          }}
+        >
+          <Link href={pageItem.url}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                {/* <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon> */}
+
+                <Box
+                  sx={{
+                    marginLeft: "20px",
+                    fontWeight: "bold",
+                  }}
+                  pl={3}
+                >
+                  <ListItemText primary={pageItem.name} />
+                </Box>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        </Box>
+      ))}
+    </List>
+    <Divider />
+    <AuthButtons logedIn={logedIn} />
+  </Box>
+);
+
+function Navbar({}: Props) {
+  const [logedIn, setLogedIn] = useState<boolean>(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [anchorElNav, setAnchorElNav] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    setAnchorElNav(true);
   };
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+    setAnchorElNav(false);
   };
 
   return (
-    <NavbarStyled
-      sx={{
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.background.default,
-        "&:a": {
-          color: theme.palette.text.primary,
-        },
-      }}
-      position="static"
-    >
+    <nav>
+      <Paper elevation={3} >
       <NavbarContainer>
-        <Toolbar disableGutters>
-          <Box
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <img src="/images/logo.png" width="150" />
-          </Box>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+        {isDesktop ? (
+          <>
+            <Link href="/">
+              <Logo src="/images/logo.png" width="150" height="40" />
+            </Link>
+            <Box
               sx={{
-                display: { xs: "block", md: "none" },
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            <img src="/images/logo.png" width="150" />
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    color: theme.palette.text.primary,
-                    display: "block",
-                  }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+              <NavbarLinks />
+              <AuthButtons logedIn={logedIn} />
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
+              <Tooltip title="Menu">
+                <IconButton onClick={handleOpenNavMenu}>
+                  <MenuIcon />
+                </IconButton>
+              </Tooltip>
+              <Drawer
+                anchor="top"
+                open={anchorElNav}
+                onClose={handleCloseNavMenu}
+              >
+                {list("top", logedIn)}
+              </Drawer>
+              <Link href="/">
+                <Image
+                  src="/images/logo.png"
+                  width="150"
+                  height="40"
+                  alt="teacherfox-logo"
+                />
+              </Link>
+              {logedIn ? (
+                <Tooltip title="Login/Register">
+                  <Link href="/authentication">
+                    <LoginIcon />
+                  </Link>
+                </Tooltip>
+              ) : (
+                <UserAvatar menu={settings} />
+              )}
+            </Box>
+          </>
+        )}
       </NavbarContainer>
-    </NavbarStyled>
+
+      </ Paper>
+    </nav>
   );
 }
-export default ResponsiveAppBar;
+
+export default Navbar;

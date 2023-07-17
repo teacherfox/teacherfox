@@ -6,11 +6,6 @@ import { Container, AppBar, Box } from "@/configs/mui";
 
 export const LessonCategoriesSection = styled(Box)(
   ({ theme }) => ({
-    // "& > div": {
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
     paddingTop: "50px",
     marginΤοp: "50px",
     fontFamily: "Open Sans",
@@ -21,38 +16,11 @@ export const LessonCategoriesSection = styled(Box)(
       fontSize: "26px",
       color: Colors.text.header,
     },
-    // h5: {
-    //   fontSize: "24px",
-    //   color: Colors.text.header2,
-    //   marginTop: "0px",
-    //   marginBottom: "0px",
-    // },
-    // h4: {
-    //   fontSize: "24px",
-    //   color: Colors.text.header2,
-    //   marginTop: "0px",
-    //   marginBottom: "0px",
-    // },
     p: {
       fontSize: "17px",
       color: Colors.primary.vivid,
     },
-    // paddingBottom: "50px",
-    // hr: {
-    //   backgroundColor: Colors.primary.vivid,
-    //   height: "6px",
-    //   opacity: 0.25,
-    //   marginBottom: "20px",
-    //   margingLeft: "20px",
-    //   transform: "translateX(20px)",
-    // },
   })
-  //   mq({
-  //     marginTop: ["0px", "0px", "-50px"],
-  //     "& > div": {
-  //       flexDirection: ["column", "column", "row"],
-  //     },
-  //   })
 );
 
 export const HowItWorksSection = styled(Box)(({ theme }) => ({

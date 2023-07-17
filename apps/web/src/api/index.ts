@@ -10,7 +10,7 @@ export const getApiApiBaseUrl = (apiBaseUrl: string) => {
 
 // Alter defaults after instance has been created
 export const setApiAuth = (access_token: string) => {
-  api.defaults.headers.common["Authorization"] = `Token ${access_token}`;
+  api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
 };
 
 export const removeApiAuth = () => {

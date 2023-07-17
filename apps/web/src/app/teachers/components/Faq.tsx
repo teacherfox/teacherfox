@@ -14,6 +14,7 @@ type QnAType = {
   answer: string;
 };
 
+// TODO: repleace this from the BE
 const QuestionsList: QnAType[] = [
   {
     question: "Πώς μπορώ να γίνω μέλος στο TeacherFox;",

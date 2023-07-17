@@ -10,6 +10,7 @@ type BenefitType = {
   paragraph: string;
 };
 
+// TODO: provide from the BE
 const BeneftisList: BenefitType[] = [
   {
     icon: "teacher/home",

@@ -29,6 +29,7 @@ export type UserCardType = {
   lowestPrice: Number;
 };
 
+// TODO: remove mock data in the future
 const UserCards: UserCardType[] = [
   {
     id: 1,
