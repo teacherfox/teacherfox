@@ -212,6 +212,9 @@ resource "aws_iam_policy" "developer_policy" {
           "ec2:Get*",
           "ec2:List*",
           "elasticloadbalancing:Describe*",
+          "cloudwatch:Describe*",
+          "cloudwatch:Get*",
+          "cloudwatch:List*",
         ]
         Resource = "*"
       },
@@ -237,6 +240,11 @@ resource "aws_iam_role" "developer_role" {
 resource "aws_iam_role_policy_attachment" "developer_policy_attach" {
   role       = aws_iam_role.developer_role.name
   policy_arn = aws_iam_policy.developer_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "developer_billing_policy_attach" {
+  role       = aws_iam_role.developer_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "server_policy_attach" {
@@ -287,7 +295,7 @@ resource "aws_iam_role" "administrator_role" {
   name        = "admin"
   description = "Administrator access to all services"
 
-  managed_policy_arns  = ["arn:aws:iam::aws:policy/AdministratorAccess"]
+  managed_policy_arns  = ["arn:aws:iam::aws:policy/AdministratorAccess", "arn:aws:iam::aws:policy/job-function/Billing"]
   max_session_duration = 43200
   assume_role_policy   = data.aws_iam_policy_document.instance_assume_role_policy.json
 }
