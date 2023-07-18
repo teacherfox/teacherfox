@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "execution_policy_document" {
   statement {
     actions   = ["secretsmanager:DescribeSecret", "secretsmanager:GetSecretValue"]
     resources = concat([
-      "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:/${var.environment}/${var.service_name}/*",
+      "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:${var.environment}/${var.service_name}/*",
       var.create_database ? module.database[0].urls_arn : ""
     ])
   }
