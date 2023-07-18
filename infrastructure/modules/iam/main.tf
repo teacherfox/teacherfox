@@ -232,7 +232,7 @@ resource "aws_iam_policy" "developer_policy" {
         Action = [
           "ec2:*"
         ]
-        Resource = ["arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:instance/prod*"]
+        Resource = ["arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:instance/i-04cfdec1d618ee59f"]
       }
     ]
   })
