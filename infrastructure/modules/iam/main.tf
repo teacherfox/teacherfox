@@ -178,17 +178,10 @@ resource "aws_iam_policy" "developer_policy" {
     Version   = "2012-10-17"
     Statement = [
       {
-        Sid : "AllowViewAccountInfo"
-        Effect : "Allow",
-        Action = [
-          "iam:ListAccountAliases"
-        ]
-        Resource = "*"
-      },
-      {
         Sid : "AllowReadAccessToUsingServices"
         Effect : "Allow",
         Action = [
+          "iam:ListAccountAliases"
           "ecr:List*",
           "ecr:Get*",
           "ecr:BatchGet*",
@@ -329,7 +322,7 @@ resource "aws_iam_policy" "cost_explorer_policy" {
     Version   = "2012-10-17"
     Statement = [
       {
-        Sid : "AllowViewAccountInfo"
+        Sid : "AllowCostExplorer"
         Effect : "Allow",
         Action = [
           "ce:*"
