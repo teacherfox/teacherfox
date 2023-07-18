@@ -197,8 +197,31 @@ resource "aws_iam_policy" "developer_policy" {
           "ecs:List*",
           "ecs:Get*",
           "ecs:Describe*",
+          "rds:Describe*",
+          "rds:List*",
+          "s3:List*",
+          "s3:Get*",
+          "s3:Get*",
+          "amplify:List*",
+          "amplify:Get*",
+          "route53:List*",
+          "route53:Get*",
+          "secretsmanager:List*",
+          "secretsmanager:DescribeSecret",
+          "ec2:Describe*",
+          "ec2:Get*",
+          "ec2:List*",
+          "elasticloadbalancing:Describe*",
         ]
         Resource = "*"
+      },
+      {
+        Sid : "SecreManager"
+        Effect : "Allow",
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        NotResource = ["arn:aws:secretsmanager:*:*:secret:prod/*"]
       },
     ]
   })
