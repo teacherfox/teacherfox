@@ -52,5 +52,5 @@ module "database" {
 
 resource "aws_secretsmanager_secret" "server_secret" {
   for_each = var.secrets
-  name     = "/${var.environment}/${var.service_name}/${each.key}"
+  name     = "${var.environment}/${var.service_name}/${each.key}"
 }
