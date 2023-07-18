@@ -208,13 +208,13 @@ resource "aws_iam_policy" "developer_policy" {
           "route53:Get*",
           "secretsmanager:List*",
           "secretsmanager:DescribeSecret",
-          "ec2:Describe*",
-          "ec2:Get*",
-          "ec2:List*",
           "elasticloadbalancing:Describe*",
           "cloudwatch:Describe*",
           "cloudwatch:Get*",
           "cloudwatch:List*",
+          "ce:Get*",
+          "ce:List*",
+          "ce:Describe*",
         ]
         Resource = "*"
       },
@@ -225,14 +225,6 @@ resource "aws_iam_policy" "developer_policy" {
           "secretsmanager:GetSecretValue"
         ]
         NotResource = ["arn:aws:secretsmanager:*:*:secret:prod/*"]
-      },
-      {
-        Sid : "Ec2"
-        Effect : "Deny",
-        Action = [
-          "ec2:*"
-        ]
-        Resource = ["arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:instance/i-04cfdec1d618ee59f"]
       }
     ]
   })
@@ -326,6 +318,31 @@ resource "aws_iam_policy" "administrator_assume_policy" {
       },
     ]
   })
+}
+
+resource "aws_iam_policy" "cost_explorer_policy" {
+  name        = "CostExplorer"
+  path        = "/"
+  description = "All access in cost explorer"
+
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Sid : "AllowViewAccountInfo"
+        Effect : "Allow",
+        Action = [
+          "ce:*"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cost_explorer_policy_attach" {
+    role       = aws_iam_role.administrator_role.name
+    policy_arn = aws_iam_policy.cost_explorer_policy.arn
 }
 
 resource "aws_iam_group" "administrators_group" {
