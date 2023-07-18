@@ -219,13 +219,21 @@ resource "aws_iam_policy" "developer_policy" {
         Resource = "*"
       },
       {
-        Sid : "SecreManager"
+        Sid : "SecretManager"
         Effect : "Allow",
         Action = [
           "secretsmanager:GetSecretValue"
         ]
         NotResource = ["arn:aws:secretsmanager:*:*:secret:prod/*"]
       },
+      {
+        Sid : "Ec2"
+        Effect : "Deny",
+        Action = [
+          "ec2:*"
+        ]
+        Resource = ["arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:instance/prod*"]
+      }
     ]
   })
 }
