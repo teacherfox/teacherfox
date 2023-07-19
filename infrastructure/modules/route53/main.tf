@@ -93,13 +93,3 @@ resource "aws_route53_record" "mail" {
   ttl     = "300"
   records = ["10 mx.zoho.eu.", "20 mx2.zoho.eu.", "50 mx2.zoho.eu."]
 }
-
-resource "aws_route53_zone" "com_zone" {
-  count = var.environment == "prod" ? 1 : 0
-  name         = "teacherfox.com"
-}
-
-resource "aws_route53_zone" "gr_zone" {
-  count = var.environment == "prod" ? 1 : 0
-  name         = "teacherfox.gr"
-}
