@@ -1,5 +1,5 @@
 output "zone_id" {
-  value = aws_route53_zone.teacherfox.id
+  value = aws_route53_zone.zone.id
 }
 
 output "wildcard_certificate_arn" {
@@ -7,5 +7,5 @@ output "wildcard_certificate_arn" {
 }
 
 output "domain_name" {
-  value = aws_route53_zone.teacherfox.name
+  value = aws_route53_zone.zone.name
 }

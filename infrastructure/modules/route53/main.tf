@@ -9,8 +9,7 @@ resource "aws_acm_certificate" "wildcard" {
   subject_alternative_names = ["*.${local.domain}", local.domain]
 }
 
-
-resource "aws_route53_zone" "teacherfox" {
+resource "aws_route53_zone" "zone" {
   name         = local.domain
 }
 
@@ -25,12 +24,12 @@ resource "aws_route53_record" "nameservers_to_parent" {
   name    = var.environment
   type    = "NS"
   ttl     = "86400"
-  records = aws_route53_zone.teacherfox.name_servers
+  records = aws_route53_zone.zone.name_servers
 }
 
 resource "aws_route53_record" "zoho_verification" {
   count   = var.environment == "prod" ? 1 : 0
-  zone_id = aws_route53_zone.teacherfox.zone_id
+  zone_id = aws_route53_zone.zone.zone_id
   name    = ""
   type    = "TXT"
   ttl     = "86400"
@@ -39,7 +38,7 @@ resource "aws_route53_record" "zoho_verification" {
 
 resource "aws_route53_record" "dmarc_policy" {
   count   = var.environment == "prod" ? 1 : 0
-  zone_id = aws_route53_zone.teacherfox.zone_id
+  zone_id = aws_route53_zone.zone.zone_id
   name    = "_dmarc"
   type    = "TXT"
   ttl     = "86400"
@@ -60,7 +59,7 @@ resource "aws_route53_record" "wildcard_records" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.teacherfox.zone_id
+  zone_id         = aws_route53_zone.zone.zone_id
 }
 
 resource "aws_acm_certificate_validation" "wildcard_validation" {
@@ -70,7 +69,7 @@ resource "aws_acm_certificate_validation" "wildcard_validation" {
 
 resource "aws_route53_record" "github_verification" {
   count   = var.environment == "prod" ? 1 : 0
-  zone_id = aws_route53_zone.teacherfox.zone_id
+  zone_id = aws_route53_zone.zone.zone_id
   name    = "_github-challenge-teacherfox-org"
   type    = "TXT"
   ttl     = "86400"
@@ -79,7 +78,7 @@ resource "aws_route53_record" "github_verification" {
 
 resource "aws_route53_record" "dkim" {
   count   = var.environment == "prod" ? 1 : 0
-  zone_id = aws_route53_zone.teacherfox.zone_id
+  zone_id = aws_route53_zone.zone.zone_id
   name    = "teacherfox._domainkey"
   type    = "TXT"
   ttl     = "86400"
@@ -88,9 +87,19 @@ resource "aws_route53_record" "dkim" {
 
 resource "aws_route53_record" "mail" {
   count   = var.environment == "prod" ? 1 : 0
-  zone_id = aws_route53_zone.teacherfox.zone_id
+  zone_id = aws_route53_zone.zone.zone_id
   name    = ""
   type    = "MX"
   ttl     = "300"
   records = ["10 mx.zoho.eu.", "20 mx2.zoho.eu.", "50 mx2.zoho.eu."]
+}
+
+resource "aws_route53_zone" "com_zone" {
+  count = var.environment == "prod" ? 1 : 0
+  name         = "teacherfox.com"
+}
+
+resource "aws_route53_zone" "gr_zone" {
+  count = var.environment == "prod" ? 1 : 0
+  name         = "teacherfox.gr"
 }

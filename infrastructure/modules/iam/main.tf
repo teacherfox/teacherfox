@@ -181,7 +181,7 @@ resource "aws_iam_policy" "developer_policy" {
         Sid : "AllowReadAccessToUsingServices"
         Effect : "Allow",
         Action = [
-          "iam:ListAccountAliases"
+          "iam:ListAccountAliases",
           "ecr:List*",
           "ecr:Get*",
           "ecr:BatchGet*",
