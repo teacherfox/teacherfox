@@ -11,7 +11,7 @@ resource "aws_route53_zone" "gr_zone" {
 resource "aws_route53_record" "teacherfox_com" {
   count   = var.environment == "prod" ? 1 : 0
   zone_id = aws_route53_zone.com_zone[0].zone_id
-  name    = ""
+  name    = "www.teacherfox.com."
   type    = "CNAME"
   ttl     = "14400"
   records = ["teacherfox.com."]
@@ -132,5 +132,5 @@ resource "aws_route53_record" "teacherfox_com_autodiscover" {
   name    = "_autodiscover._tcp"
   type    = "SRV"
   ttl     = "14400"
-  records = ["linuxzone153.grserver.gr."]
+  records = ["5 0 443 linuxzone153.grserver.gr."]
 }
