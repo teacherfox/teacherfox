@@ -61,29 +61,6 @@ resource "aws_amplify_app" "frontend" {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/web"
   }
   access_token = var.personal_token
-  build_spec           = <<-EOT
-    version: 1
-    applications:
-      - frontend:
-          phases:
-            preBuild:
-              commands:
-                - npm install -g pnpm
-                - pnpm add turbo --save-dev --ignore-workspace-root-check
-            build:
-              commands:
-                - pnpm turbo run build --filter=web
-          artifacts:
-            baseDirectory: apps/web/.next
-            files:
-              - '**/*'
-          cache:
-            paths:
-              - node_modules/**/*
-              - .next/cache/**/*
-          buildPath: /
-        appRoot: apps/web
-  EOT
   iam_service_role_arn = aws_iam_role.service_role.arn
   platform             = "WEB_COMPUTE"
 }
