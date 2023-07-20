@@ -188,9 +188,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
     devDependencies:
-      '@babel/core':
-        specifier: ^7.22.9
-        version: 7.22.9
       '@types/node':
         specifier: ^20.4.2
         version: 20.4.2
@@ -200,9 +197,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.7
-      eslint:
-        specifier: 8.45.0
-        version: 8.45.0
       eslint-config-next:
         specifier: workspace:*
         version: link:../../packages/eslint-config-next

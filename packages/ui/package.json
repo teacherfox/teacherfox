@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
-  "license": "MIT",
+  "private": true,
   "scripts": {
     "lint": "eslint *.ts*",
     "clean": "rm -rf .turbo node_modules",
-    "update": "pnpm update --latest && pnpm install"
+    "update": "pnpm update --latest && pnpm install",
+    "generate:component": "turbo gen react-component"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

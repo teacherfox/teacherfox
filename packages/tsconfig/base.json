@@ -11,6 +11,8 @@
     "isolatedModules": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "module": "ES2022",
+    "moduleResolution": "node",
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
