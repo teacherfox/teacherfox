@@ -12,9 +12,15 @@
     "update": "pnpm update --latest && pnpm install"
   },
   "dependencies": {
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.1",
+    "@mui/material": "^5.14.1",
+    "facepaint": "^1.2.1",
+    "moment": "^2.29.4",
     "next": "^13.4.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.10.1",
     "ui": "workspace:*"
   },
   "devDependencies": {
@@ -22,6 +28,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "eslint-config-next": "workspace:*",
+    "server-only": "^0.0.1",
     "tsconfig": "workspace:*",
     "typescript": "^5.1.6"
   }
