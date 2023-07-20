@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["APP_SECRET"],
+  "globalDependencies": ["**/.env", "**/.env.*local"],
+  "globalEnv": ["READ_ONLY_DATABASE_URL", "DATABASE_URL", "AUTH_SECRET", "AWS_REGION", "PORT", "MODE"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],

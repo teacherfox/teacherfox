@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-custom",
+  "name": "eslint-config-node",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,8 +9,11 @@
     "update": "pnpm update --latest && pnpm install"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-config-turbo": "^1.10.9"
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "eslint": "^8.45.0",
+    "eslint-config-custom": "workspace:*",
+    "typescript": "^5.1.6"
   },
   "publishConfig": {
     "access": "public"

@@ -12,15 +12,15 @@ import { DateTimeResolver } from 'graphql-scalars';
 import ScopeAuthPlugin from '@pothos/plugin-scope-auth';
 import RelayPlugin from '@pothos/plugin-relay';
 import { GraphQLContext } from './context.js';
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql';
 
 export const prisma = new PrismaClient({});
 export const readOnlyPrisma = new PrismaClient({
   datasources: {
     db: {
-      url: process.env.READ_ONLY_DATABASE_URL ?? process.env.DATABASE_URL
-    }
-  }
+      url: process.env.READ_ONLY_DATABASE_URL ?? process.env.DATABASE_URL,
+    },
+  },
 });
 
 interface AuthenticatedContext extends GraphQLContext {

@@ -1,7 +1,7 @@
 /** @type {import('@typescript-eslint/utils').TSESLint.Linter.Config} */
 const eslintrcConfig = {
   root: true,
-  extends: ["custom"],
+  extends: ["next"],
 };
 
 module.exports = eslintrcConfig;
