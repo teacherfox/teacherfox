@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-custom",
+  "name": "eslint-config-next",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,8 +9,9 @@
     "update": "pnpm update --latest && pnpm install"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-config-turbo": "^1.10.9"
+    "eslint-config-custom": "workspace:*",
+    "eslint-config-next": "^13.4.10",
+    "eslint-plugin-react": "7.32.2"
   },
   "publishConfig": {
     "access": "public"
