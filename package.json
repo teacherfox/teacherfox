@@ -17,10 +17,11 @@
     "update": "turbo run update"
   },
   "devDependencies": {
+    "@turbo/gen": "^1.10.9",
     "@types/prettier": "^2.7.2",
     "eslint-config-custom": "workspace:*",
-    "prettier": "latest",
-    "turbo": "^1.10.7"
+    "prettier": "^3.0.0",
+    "turbo": "^1.10.9"
   },
   "engines": {
     "node": ">=14.0.0"

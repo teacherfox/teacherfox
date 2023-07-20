@@ -13,7 +13,7 @@ A bunch of cool staff for teachers.
 
 1. Clone the repo
 2. Create a db named `teacherfox` in postgres
-3. Create a `.env` file in the apps/graphql directory and add the following variables:
+3. Create a `.env` file in the apps/server directory and add the following variables:
 
 ```
 DATABASE_URL="postgresql://<USERNAME>:<PASSWORD>@localhost:5432/teacherfox?schema=public&connection_limit=5"

@@ -20,17 +20,17 @@
   "author": "",
   "license": "UNLICENCED",
   "devDependencies": {
-    "@babel/core": "^7.22.8",
+    "@babel/core": "^7.22.9",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/client-preset": "^4.0.1",
-    "@prisma/client": "^4.16.2",
+    "@prisma/client": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "9.0.2",
-    "@types/node": "20.4.1",
+    "@types/node": "20.4.2",
     "concurrently": "^8.2.0",
     "cross-env": "7.0.3",
-    "eslint": "^8.44.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^8.45.0",
+    "eslint-config-node": "workspace:*",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
@@ -53,7 +53,7 @@
     "graphql-yoga": "4.0.3",
     "jsonwebtoken": "^9.0.1",
     "logger": "workspace:*",
-    "prisma": "^4.16.2",
+    "prisma": "^5.0.0",
     "zod": "^3.21.4"
   }
 }
