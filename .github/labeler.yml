@@ -14,7 +14,6 @@ server:
   - packages/eslint-config-node/**/*
   - packages/tsconfig/node.json
   - packages/tsconfig/base.json
-  - apps/infrastructure/**/*
 
 web:
   - apps/web/**/*
@@ -25,4 +24,3 @@ web:
   - packages/eslint-config-next/**/*
   - packages/tsconfig/next.json
   - packages/tsconfig/base.json
-  - apps/infrastructure/**/*
