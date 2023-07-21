@@ -1,0 +1,23 @@
+automation:
+  - .github/*
+
+documentation:
+  - '*.md'
+
+server:
+  - apps/server/**/*
+  - packages/logger/**/*
+  - packages/eslint-config-custom/**/*
+  - packages/eslint-config-node/**/*
+  - packages/tsconfig/**/*
+  - !packages/tsconfig/next.json
+
+web:
+  - apps/web/**/*
+  - packages/logger/**/*
+  - packages/ui/**/*
+  - packages/tailwind-config/**/*
+  - packages/eslint-config-custom/**/*
+  - packages/eslint-config-next/**/*
+  - packages/tsconfig/**/*
+  - !packages/tsconfig/node.json
