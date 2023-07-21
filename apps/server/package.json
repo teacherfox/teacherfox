@@ -15,6 +15,7 @@
     "update": "pnpm update --latest && pnpm install && pnpm generate",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
+    "migrate:down": "npx prisma migrate diff --from-schema-datamodel prisma/schema.prisma --to-schema-datasource prisma/schema.prisma --script > down.sql",
     "codegen": "graphql-codegen-esm --config src/schema/codegen.ts"
   },
   "author": "",

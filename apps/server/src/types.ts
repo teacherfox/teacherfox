@@ -4,6 +4,21 @@ export const UserDto = builder.prismaObject('User', {
   fields: (t) => ({
     id: t.exposeID('id'),
     name: t.exposeString('name'),
+    email: t.exposeString('email'),
+    createdAt: t.expose('createdAt', { type: 'Date' }),
+    forgetPassword: t.relation('forgetPassword'),
+    messagesSent: t.relation('messagesSent'),
+    messagesReceived: t.relation('messagesReceived'),
+  }),
+});
+
+export const ForgetPasswordDto = builder.prismaObject('ForgetPassword', {
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    token: t.exposeString('token'),
+    createdAt: t.expose('createdAt', { type: 'Date' }),
+    updatedAt: t.expose('updatedAt', { type: 'Date' }),
+    user: t.relation('user'),
   }),
 });
 
