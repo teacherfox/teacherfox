@@ -45,7 +45,7 @@ function Steps({}: Props) {
               <Box textAlign="center">
                 <img
                   src={`./images/${
-                    index % 2 !== 0 ? "download7" : "download9"
+                    index % 2 !== 0 ? "left-curved-arrow" : "right-curved-arrow"
                   }.png`}
                   height="220"
                   alt=""

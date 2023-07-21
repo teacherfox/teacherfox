@@ -31,7 +31,6 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.9.0",
-    "typescript": "5.0.4",
     "yup": "^1.1.1",
     "ui": "workspace:*"
   },
@@ -48,6 +47,6 @@
     "tailwind-config": "workspace:*",
     "tailwindcss": "^3.2.4",
     "tsconfig": "workspace:*",
-    "typescript": "^4.9.4"
+    "typescript": "^5.1.6"
   }
 }

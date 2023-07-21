@@ -8,16 +8,36 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@/api/*": ["./src/api/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/common/*": ["./src/components/common/*"],
-      "@/elements/*": ["./src/components/elements/*"],
-      "@/configs/*": ["./src/configs/*"],
-      "@/pages/*": ["./src/pages/*"],
-      "@/views/*": ["./src/views/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@/api/*": [
+        "./src/api/*"
+      ],
+      "@/app/*": [
+        "./src/app/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/common/*": [
+        "./src/components/common/*"
+      ],
+      "@/elements/*": [
+        "./src/components/elements/*"
+      ],
+      "@/configs/*": [
+        "./src/configs/*"
+      ],
+      "@/pages/*": [
+        "./src/pages/*"
+      ],
+      "@/views/*": [
+        "./src/views/*"
+      ]
+    },
+    "allowJs": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
