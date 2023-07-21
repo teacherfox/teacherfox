@@ -47,5 +47,6 @@ model ForgetPassword {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   user      User     @relation(fields: [id], references: [id])
 
+  @@index([createdAt(sort: Desc)])
   @@map("forget_passwords")
 }

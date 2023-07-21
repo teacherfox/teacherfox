@@ -1,23 +1,28 @@
 import { builder, prisma, readOnlyPrisma } from '../builder.js';
 import bcryptjs from 'bcryptjs';
 import jsonwebtoken from 'jsonwebtoken';
-import { SignUpDto } from '../types.js';
+import { ForgetPasswordDto, SignUpDto, UserDto } from '../types.js';
 import { AUTH_SECRET } from '../config/config.js';
 import { GraphQLError } from 'graphql';
 import { z } from 'zod';
-import { randomUUID } from "crypto";
-import { sendForgetPasswordEmail } from "../email.js";
+import { randomUUID } from 'crypto';
+import { sendForgetPasswordEmail } from '../email.js';
 
 const { sign } = jsonwebtoken;
 const { compare, hash } = bcryptjs;
 
 const usernameSchema = z.string().min(3).max(30);
 const emailSchema = z.string().email();
-const passwordSchema = z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,30}$/, { message: "Password must be at least 8 and at most 30 characters long and contain at least one uppercase letter, one lowercase letter and one number" });
+const passwordSchema = z
+  .string()
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,30}$/, {
+    message:
+      'Password must be at least 8 and at most 30 characters long and contain at least one uppercase letter, one lowercase letter and one number',
+  });
 
 builder.queryFields((t) => ({
   me: t.withAuth({ authenticated: true }).prismaField({
-    type: 'User',
+    type: UserDto,
     resolve: async (query, root, args, ctx, _info) =>
       await readOnlyPrisma.user.findUniqueOrThrow({
         ...query,
@@ -29,17 +34,17 @@ builder.queryFields((t) => ({
 const signUpSchema = z.object({
   name: usernameSchema,
   email: emailSchema,
-  password: passwordSchema
-})
+  password: passwordSchema,
+});
 
 const loginSchema = z.object({
   email: emailSchema,
-  password: passwordSchema
-})
+  password: passwordSchema,
+});
 
 const updateUserSchema = z.object({
-  name: usernameSchema
-})
+  name: usernameSchema,
+});
 
 builder.mutationFields((t) => ({
   signup: t.field({
@@ -88,7 +93,7 @@ builder.mutationFields((t) => ({
     },
   }),
   updateUser: t.withAuth({ authenticated: true }).prismaField({
-    type: 'User',
+    type: UserDto,
     args: {
       name: t.arg.string(),
     },
@@ -100,12 +105,12 @@ builder.mutationFields((t) => ({
         data: args as z.infer<typeof updateUserSchema>,
       }),
   }),
-  forgetPassword: t.field({
-    type: 'Boolean',
+  forgetPassword: t.prismaField({
+    type: ForgetPasswordDto,
     args: {
       email: t.arg.string({ required: true }),
     },
-    resolve: async (root, args, _ctx, _info) => {
+    resolve: async (query, root, args, _ctx, _info) => {
       const user = await readOnlyPrisma.user.findUnique({
         where: { email: args.email },
       });
@@ -123,25 +128,25 @@ builder.mutationFields((t) => ({
         name: user.name,
         action_url: `https://teacherfox.com.cy/reset-password?token=${token}`,
         operating_system: 'to be filled',
-        browser_name: 'to be filled'
-      })
-      return true;
-    }
+        browser_name: 'to be filled',
+      });
+      return forgetPassword;
+    },
   }),
   resetPassword: t.prismaField({
-    type: 'User',
+    type: UserDto,
     args: {
       token: t.arg.string({ required: true }),
       password: t.arg.string({
         validate: {
-          schema: passwordSchema
-        }
+          schema: passwordSchema,
+        },
       }),
     },
     resolve: async (query, root, args, _ctx, _info) => {
       const forgetPassword = await readOnlyPrisma.forgetPassword.findUnique({
-        where: { token: args.token },
-        include: { user: query }
+        where: { token: args.token, createdAt: { gt: new Date(Date.now() - 1000 * 60 * 60 * 24) } },
+        include: { user: query },
       });
       if (!forgetPassword) {
         throw new GraphQLError('Invalid token');
@@ -159,6 +164,6 @@ builder.mutationFields((t) => ({
         ]);
       }
       return forgetPassword.user;
-    }
-  })
+    },
+  }),
 }));
