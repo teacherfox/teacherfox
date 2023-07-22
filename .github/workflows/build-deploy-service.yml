@@ -68,8 +68,8 @@ jobs:
           context: .
           file: ./apps/${{ inputs.service_name }}/Dockerfile
           platforms: linux/arm64
-          cache-from: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:prod-cache
-          cache-to: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:prod-cache,mode=max
+          cache-from: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:${{ inputs.environment }}-cache
+          cache-to: type=registry,ref=ghcr.io/${{ inputs.organization }}/${{ inputs.service_name }}:${{ inputs.environment }}-cache,mode=max
 
   deploy:
 
