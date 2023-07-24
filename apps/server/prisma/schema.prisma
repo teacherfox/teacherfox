@@ -16,11 +16,13 @@ model User {
   id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name             String
   email            String          @unique
-  password         String
+  password         String?
   messagesSent     Message[]       @relation("senderUserRel")
   messagesReceived Message[]       @relation("receiverUserRel")
   createdAt        DateTime        @default(now()) @map("created_at")
   forgetPassword   ForgetPassword?
+  googleId         BigInt?         @unique @map("google_id")
+  photo            String?         @map("photo_url")
 
   @@map("users")
 }

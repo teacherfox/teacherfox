@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel --concurrency=20",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
     "clean": "turbo run clean",
