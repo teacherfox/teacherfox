@@ -5,8 +5,9 @@ import { logger } from 'logger';
 import { Environment, MODE, PORT } from './config/config.js';
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection';
 import express from 'express';
-import { googleLogin } from "./google.js";
-import { isTFError } from "./types.js";
+import { googleLogin } from './google.js';
+import { isTFError } from './types.js';
+import rateLimit from 'express-rate-limit';
 
 const index = () => {
   const app = express();
@@ -28,6 +29,17 @@ const index = () => {
     }
     res.send(result);
   });
+
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  });
+
+  // Apply the rate limiting middleware to all requests
+  app.use(limiter);
+
   const port = PORT;
   app.listen(port, () => {
     logger.info(`Server is running on http://localhost:${port}/graphql`);
