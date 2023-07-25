@@ -1,7 +1,7 @@
 import { builder } from '../builder.js';
 import './userOperations.js';
 import './messageOperations.js';
-import '../types.js';
+import './types.js';
 
 builder.queryType({
   fields: (_t) => ({}),

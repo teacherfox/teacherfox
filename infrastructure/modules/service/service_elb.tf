@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "lb_target_group" {
     healthy_threshold   = 3
     unhealthy_threshold = 5
     protocol            = "HTTP"
-    path                = "/health"
+    path                = "/graphql"
     timeout             = 6
   }
 

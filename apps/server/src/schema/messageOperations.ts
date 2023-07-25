@@ -1,6 +1,6 @@
 import { builder, prisma, readOnlyPrisma } from "../builder.js";
 import { pubSub } from '../pubsub.js';
-import { MessageDto } from '../types.js';
+import { MessageDto } from './types.js';
 import { Message } from '../../.prisma';
 import { filter, map, pipe, Repeater } from '@graphql-yoga/subscription';
 
