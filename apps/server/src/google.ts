@@ -73,7 +73,7 @@ const client = new OAuth2Client(
 );
 
 interface UserdataType {
-  id: number;
+  id: string;
   name: string;
   email: string;
   photo?: string;
@@ -98,7 +98,7 @@ const getUserdata = async (code: string) => {
     const url = 'https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos';
     const { data } = await client.request<PeopleData>({ url });
     return {
-      id: Number(data.resourceName.replace('people/', '')),
+      id: data.resourceName.replace('people/', ''),
       name: data.names.find((name) => name.metadata.primary)?.displayName,
       email: data.emailAddresses.find((email) => email.metadata.primary)?.value,
       photo: data.photos.find((photo) => photo.metadata.primary)?.url,

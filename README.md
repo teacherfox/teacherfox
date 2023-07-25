@@ -16,6 +16,7 @@ A bunch of cool staff for teachers.
 3. Create a `.env` file in the apps/server directory and add the following variables:
 
 ```
+AUTH_SECRET=<YOUR_SECRET>
 DATABASE_URL="postgresql://<USERNAME>:<PASSWORD>@localhost:5432/teacherfox?schema=public&connection_limit=5"
 ```
 

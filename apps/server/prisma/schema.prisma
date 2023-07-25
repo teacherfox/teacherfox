@@ -21,7 +21,7 @@ model User {
   messagesReceived Message[]       @relation("receiverUserRel")
   createdAt        DateTime        @default(now()) @map("created_at")
   forgetPassword   ForgetPassword?
-  googleId         BigInt?         @unique @map("google_id")
+  googleId         String?         @unique @map("google_id")
   photo            String?         @map("photo_url")
 
   @@map("users")
