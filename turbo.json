@@ -31,6 +31,9 @@
     "lint:fix": {
       "outputs": []
     },
+    "prettier": {
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true

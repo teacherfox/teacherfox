@@ -35,12 +35,21 @@ resource "aws_ecs_task_definition" "task_definition" {
           containerPort = local.service_port
         }
       ]
-      secrets = concat(local.db_secrets, [
-        for k, v in aws_secretsmanager_secret.server_secret : {
+      secrets = concat(
+        local.db_secrets,
+        [
+          for k, v in var.mapped_secrets : {
+          name      = upper(v.name)
+          valueFrom = v.valueFrom
+        }
+        ],
+        [
+          for k, v in aws_secretsmanager_secret.server_secret : {
           name      = upper(k)
           valueFrom = v.arn
         }
-      ])
+        ]
+      )
       environment = concat([
         {
           name  = "NODE_OPTIONS"

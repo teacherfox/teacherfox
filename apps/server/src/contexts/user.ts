@@ -1,6 +1,6 @@
-import bcryptjs from "bcryptjs";
-import { AUTH_SECRET } from "../config/config.js";
-import jsonwebtoken from "jsonwebtoken";
+import bcryptjs from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken';
+import { AUTH_SECRET } from '../config/config.js';
 
 const { hash } = bcryptjs;
 const { sign } = jsonwebtoken;

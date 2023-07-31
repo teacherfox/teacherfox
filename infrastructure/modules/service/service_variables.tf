@@ -70,6 +70,10 @@ variable "secrets" {
   type = set(string)
 }
 
+variable "mapped_secrets" {
+  type = set(map(string))
+}
+
 variable "environment_variables" {
   type = map(string)
 }

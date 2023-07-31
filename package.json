@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel --concurrency=20",
     "lint": "turbo run lint --continue",
+    "prettier": "turbo run prettier --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
     "clean": "turbo run clean",
@@ -21,7 +22,7 @@
     "@types/prettier": "^2.7.2",
     "eslint-config-custom": "workspace:*",
     "prettier": "^3.0.0",
-    "turbo": "^1.10.9"
+    "turbo": "^1.10.12"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -1,20 +1,18 @@
-import { builder, prisma, readOnlyPrisma } from '../builder.js';
-import { ForgetPasswordDto, SignUpDto, UserDto } from './types.js';
+import { builder, prisma, readOnlyPrisma } from '../../builder.js';
 import { GraphQLError } from 'graphql';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
-import { sendForgetPasswordEmail } from '../email.js';
-import { createJwt, createPassword, passwordsMatch } from "../contexts/user.js";
-import { getUrl } from "../google.js";
+import { sendForgetPasswordEmail } from '../../email.js';
+import { createJwt, createPassword, passwordsMatch } from '../../contexts/user.js';
+import { ForgetPasswordDto, TokenUserDto, UserDto } from './userTypes.js';
+import { queryFromInfo } from '@pothos/plugin-prisma';
 
 const usernameSchema = z.string().min(3).max(30);
 const emailSchema = z.string().email();
-const passwordSchema = z
-  .string()
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,30}$/, {
-    message:
-      'Password must be at least 8 and at most 30 characters long and contain at least one uppercase letter, one lowercase letter and one number',
-  });
+const passwordSchema = z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,30}$/, {
+  message:
+    'Password must be at least 8 and at most 30 characters long and contain at least one uppercase letter, one lowercase letter and one number',
+});
 
 builder.queryFields((t) => ({
   me: t.withAuth({ authenticated: true }).prismaField({
@@ -46,14 +44,19 @@ const updateUserSchema = z.object({
 
 builder.mutationFields((t) => ({
   signup: t.field({
-    type: SignUpDto,
+    type: TokenUserDto,
     args: {
       email: t.arg.string({ required: true }),
       password: t.arg.string({ required: true }),
       name: t.arg.string({ required: true }),
     },
     validate: (args) => signUpSchema.parse(args) && true,
-    resolve: async (root, args, _ctx, _info) => {
+    resolve: async (root, args, ctx, info) => {
+      const query = queryFromInfo({
+        context: ctx,
+        info,
+        path: ['user'],
+      });
       const existingUser = await readOnlyPrisma.user.findUnique({
         where: { email: args.email },
       });
@@ -62,6 +65,7 @@ builder.mutationFields((t) => ({
       }
       const password = await createPassword(args.password);
       const user = await prisma.user.create({
+        ...query,
         data: { ...args, password },
       });
       const token = createJwt(user.id);
@@ -69,14 +73,20 @@ builder.mutationFields((t) => ({
     },
   }),
   login: t.field({
-    type: SignUpDto,
+    type: TokenUserDto,
     args: {
       email: t.arg.string({ required: true }),
       password: t.arg.string({ required: true }),
     },
     validate: (args) => loginSchema.parse(args) && true,
-    resolve: async (root, args, _ctx, _info) => {
+    resolve: async (root, args, ctx, info) => {
+      const query = queryFromInfo({
+        context: ctx,
+        info,
+        path: ['user'],
+      });
       const user = await readOnlyPrisma.user.findUnique({
+        ...query,
         where: { email: args.email },
       });
       if (!user) {
@@ -94,8 +104,8 @@ builder.mutationFields((t) => ({
     type: UserDto,
     args: {
       name: t.arg.string(),
-      newPassword: t.arg.string({required: false, validate: { schema: passwordSchema }}),
-      oldPassword: t.arg.string({required: false, validate: { schema: passwordSchema }}),
+      newPassword: t.arg.string({ required: false, validate: { schema: passwordSchema } }),
+      oldPassword: t.arg.string({ required: false, validate: { schema: passwordSchema } }),
     },
     validate: (args) => !!updateUserSchema.parse(args) && !!args.oldPassword === !!args.newPassword,
     resolve: async (query, root, args, ctx, _info) => {
@@ -116,7 +126,7 @@ builder.mutationFields((t) => ({
         return prisma.user.update({
           ...query,
           where: { id: ctx.currentUserId },
-          data: { ...args as z.infer<typeof updateUserSchema>, password },
+          data: { ...(args as z.infer<typeof updateUserSchema>), password },
         });
       }
       return prisma.user.update({
