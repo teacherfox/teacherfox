@@ -3,8 +3,8 @@ import process from 'process';
 import { logger } from 'logger';
 import { readOnlyPrisma } from './builder.js';
 import { isTFError, TFError } from './types.js';
-import { createJwt } from "./contexts/user.js";
-import { Prisma } from "../.prisma/index.js";
+import { createJwt } from './contexts/user.js';
+import { Prisma } from '../.prisma/index.js';
 
 interface PeopleData {
   resourceName: string;
@@ -79,22 +79,18 @@ interface UserdataType {
   photo?: string;
 }
 
-const simpleUserSelect = Prisma.validator<Prisma.UserArgs>()({
-  select: { id: true, name: true, email: true, photo: true }});
-
-export type SimpleUser = Prisma.UserGetPayload<typeof simpleUserSelect>;
-
-export const getUrl = () =>
+export const generateAuthUrl = (state: string) =>
   client.generateAuthUrl({
     access_type: 'offline',
     scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
+    state,
   });
 
 const getUserdata = async (code: string) => {
   try {
-    const r = await client.getToken(code);
+    const getTokenResponse = await client.getToken(code);
     // Make sure to set the credentials on the OAuth2 client.
-    client.setCredentials(r.tokens);
+    client.setCredentials(getTokenResponse.tokens);
     const url = 'https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,photos';
     const { data } = await client.request<PeopleData>({ url });
     return {
@@ -113,14 +109,20 @@ const getUserdata = async (code: string) => {
   }
 };
 
-export const googleLogin = async (code: string) => {
+export const googleLogin = async (
+  code: string,
+  query: {
+    include?: Prisma.UserInclude | undefined;
+    select?: Prisma.UserSelect | undefined;
+  },
+) => {
   const userdata = await getUserdata(code);
   if (isTFError(userdata)) {
     return userdata;
   }
 
   const googleUser = await readOnlyPrisma.user.findUnique({
-    ...simpleUserSelect,
+    ...query,
     where: { googleId: userdata.id },
   });
 
@@ -132,7 +134,7 @@ export const googleLogin = async (code: string) => {
   }
 
   const emailUser = await readOnlyPrisma.user.findUnique({
-    ...simpleUserSelect,
+    ...query,
     where: { email: userdata.email },
   });
 
@@ -144,16 +146,16 @@ export const googleLogin = async (code: string) => {
   }
 
   const user = await readOnlyPrisma.user.create({
-    ...simpleUserSelect,
+    ...query,
     data: {
       name: userdata.name,
       email: userdata.email,
       photo: userdata.photo,
       googleId: userdata.id,
-    }
+    },
   });
   return {
     token: createJwt(user.id),
     user,
-  }
+  };
 };

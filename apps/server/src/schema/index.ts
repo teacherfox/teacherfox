@@ -1,5 +1,6 @@
 import { builder } from '../builder.js';
-import './userOperations.js';
+import './user/userOperations.js';
+import './user/googleLoginOperations.js';
 import './messageOperations.js';
 import './types.js';
 

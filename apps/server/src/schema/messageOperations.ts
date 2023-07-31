@@ -1,4 +1,4 @@
-import { builder, prisma, readOnlyPrisma } from "../builder.js";
+import { builder, prisma, readOnlyPrisma } from '../builder.js';
 import { pubSub } from '../pubsub.js';
 import { MessageDto } from './types.js';
 import { Message } from '../../.prisma';
@@ -97,8 +97,8 @@ builder.subscriptionFields((t) => ({
         Repeater.merge([undefined, pubSub.subscribe('newMessages')]),
         map((a) => a ?? { newMessages: latestUserMessages }),
         filter((value: { newMessages: Message[] }) =>
-          value.newMessages.every((newMessage) => newMessage.receiverId === ctx.currentUserId)
-        )
+          value.newMessages.every((newMessage) => newMessage.receiverId === ctx.currentUserId),
+        ),
       );
     },
   }),
@@ -109,7 +109,7 @@ builder.subscriptionFields((t) => ({
     subscribe: async (root, args, ctx) =>
       pipe(
         pubSub.subscribe('userTyping'),
-        filter((value: { receiverId: string; senderId: string }) => value.receiverId === ctx.currentUserId)
+        filter((value: { receiverId: string; senderId: string }) => value.receiverId === ctx.currentUserId),
       ),
   }),
 }));
