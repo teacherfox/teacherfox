@@ -3,8 +3,8 @@ import process from 'process';
 import { logger } from 'logger';
 import { readOnlyPrisma } from './builder.js';
 import { isTFError, TFError } from './types.js';
-import { createJwt } from './contexts/user.js';
 import { Prisma } from '../.prisma/index.js';
+import { createJwt } from './auth.js';
 
 interface PeopleData {
   resourceName: string;
@@ -123,30 +123,33 @@ export const googleLogin = async (
 
   const googleUser = await readOnlyPrisma.user.findUnique({
     ...query,
+    include: { roles: { select: { role: true } } },
     where: { googleId: userdata.id },
   });
 
   if (googleUser) {
     return {
-      token: createJwt(googleUser.id),
+      token: createJwt(googleUser.id, googleUser.roles.map((r) => r.role.name)),
       user: googleUser,
     };
   }
 
   const emailUser = await readOnlyPrisma.user.findUnique({
     ...query,
+    include: { roles: { select: { role: true } } },
     where: { email: userdata.email },
   });
 
   if (emailUser) {
     return {
-      token: createJwt(emailUser.id),
+      token: createJwt(emailUser.id, emailUser.roles.map((r) => r.role.name)),
       user: emailUser,
     };
   }
 
   const user = await readOnlyPrisma.user.create({
     ...query,
+    include: { roles: { select: { role: true } } },
     data: {
       name: userdata.name,
       email: userdata.email,
@@ -155,7 +158,7 @@ export const googleLogin = async (
     },
   });
   return {
-    token: createJwt(user.id),
+    token: createJwt(user.id, user.roles.map((r) => r.role.name)),
     user,
   };
 };

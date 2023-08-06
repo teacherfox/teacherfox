@@ -82,14 +82,14 @@ importers:
         specifier: ^3.30.0
         version: 3.30.0(graphql@16.7.1)
       '@pothos/plugin-prisma':
-        specifier: ^3.52.0
-        version: 3.52.0(@pothos/core@3.30.0)(@prisma/client@5.0.0)(graphql@16.7.1)(typescript@5.1.6)
+        specifier: ^3.55.0
+        version: 3.55.0(@pothos/core@3.30.0)(@prisma/client@5.1.1)(graphql@16.7.1)(typescript@5.1.6)
       '@pothos/plugin-relay':
         specifier: ^3.43.0
         version: 3.43.0(@pothos/core@3.30.0)(graphql@16.7.1)
       '@pothos/plugin-scope-auth':
-        specifier: ^3.19.2
-        version: 3.19.2(@pothos/core@3.30.0)(graphql@16.7.1)
+        specifier: ^3.20.0
+        version: 3.20.0(@pothos/core@3.30.0)(graphql@16.7.1)
       '@pothos/plugin-simple-objects':
         specifier: ^3.7.0
         version: 3.7.0(@pothos/core@3.30.0)(graphql@16.7.1)
@@ -121,8 +121,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/logger
       prisma:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.1.1
+        version: 5.1.1
       zod:
         specifier: ^3.21.4
         version: 3.21.4
@@ -137,8 +137,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(graphql@16.7.1)
       '@prisma/client':
-        specifier: ^5.0.0
-        version: 5.0.0(prisma@5.0.0)
+        specifier: ^5.1.1
+        version: 5.1.1(prisma@5.1.1)
       '@types/bcryptjs':
         specifier: ^2.4.2
         version: 2.4.2
@@ -2358,8 +2358,8 @@ packages:
       graphql: 16.7.1
     dev: false
 
-  /@pothos/plugin-prisma@3.52.0(@pothos/core@3.30.0)(@prisma/client@5.0.0)(graphql@16.7.1)(typescript@5.1.6):
-    resolution: {integrity: sha512-VTh5rj4ddj8XCnoA5OQWyrxFECYir1afDj71raZFdB7usnoHvCntluODPD/z8nSs1lQ4p3AAiJZ1NsS0gBNdjA==}
+  /@pothos/plugin-prisma@3.55.0(@pothos/core@3.30.0)(@prisma/client@5.1.1)(graphql@16.7.1)(typescript@5.1.6):
+    resolution: {integrity: sha512-uljWImt7G2z7ENbmrk8PUt/d2+ZWyN0HOA2vodRCwOcu2hqNqTFU5IJhYk7iZWL7vTP3xMz8N8RabmoUaNAIpA==}
     hasBin: true
     peerDependencies:
       '@pothos/core': '*'
@@ -2368,8 +2368,8 @@ packages:
       typescript: '>=4.7.2'
     dependencies:
       '@pothos/core': 3.30.0(graphql@16.7.1)
-      '@prisma/client': 5.0.0(prisma@5.0.0)
-      '@prisma/generator-helper': 4.16.2
+      '@prisma/client': 5.1.1(prisma@5.1.1)
+      '@prisma/generator-helper': 5.1.1
       graphql: 16.7.1
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -2386,8 +2386,8 @@ packages:
       graphql: 16.7.1
     dev: false
 
-  /@pothos/plugin-scope-auth@3.19.2(@pothos/core@3.30.0)(graphql@16.7.1):
-    resolution: {integrity: sha512-S+jz6sRt4LkRf3wYhq9/H4bu5OiMFoFub1HJRNgkdx9zzIQia20D+SXFlMcQluuOytVmaFXiz2gUYmY3hCQKQw==}
+  /@pothos/plugin-scope-auth@3.20.0(@pothos/core@3.30.0)(graphql@16.7.1):
+    resolution: {integrity: sha512-yaAWScp6ob5uG9Ob8YMTTga8DECANx5HW9q/bz4r66RifO/ZNEr1szXl6WpuyhqhGdasvTpzoYakVrYgs8J8wQ==}
     peerDependencies:
       '@pothos/core': '*'
       graphql: '>=15.1.0'
@@ -2418,8 +2418,8 @@ packages:
       zod: 3.21.4
     dev: false
 
-  /@prisma/client@5.0.0(prisma@5.0.0):
-    resolution: {integrity: sha512-XlO5ELNAQ7rV4cXIDJUNBEgdLwX3pjtt9Q/RHqDpGf43szpNJx2hJnggfFs7TKNx0cOFsl6KJCSfqr5duEU/bQ==}
+  /@prisma/client@5.1.1(prisma@5.1.1):
+    resolution: {integrity: sha512-fxcCeK5pMQGcgCqCrWsi+I2rpIbk0rAhdrN+ke7f34tIrgPwA68ensrpin+9+fZvuV2OtzHmuipwduSY6HswdA==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -2428,11 +2428,11 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584
-      prisma: 5.0.0
+      '@prisma/engines-version': 5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e
+      prisma: 5.1.1
 
-  /@prisma/debug@4.16.2:
-    resolution: {integrity: sha512-7L7WbG0qNNZYgLpsVB8rCHCXEyHFyIycRlRDNwkVfjQmACC2OW6AWCYCbfdjQhkF/t7+S3njj8wAWAocSs+Brw==}
+  /@prisma/debug@5.1.1:
+    resolution: {integrity: sha512-R9e2Tn8f+ujVjwn6ne1YkXY35BXzUmxJbGsmD1c8RAZ/NXgbYktEFAwIkOZn5H5zRfY2VDSBvGI6TFpnOu50cg==}
     dependencies:
       '@types/debug': 4.1.8
       debug: 4.3.4
@@ -2441,17 +2441,17 @@ packages:
       - supports-color
     dev: false
 
-  /@prisma/engines-version@4.17.0-26.6b0aef69b7cdfc787f822ecd7cdc76d5f1991584:
-    resolution: {integrity: sha512-HHiUF6NixsldsP3JROq07TYBLEjXFKr6PdH8H4gK/XAoTmIplOJBCgrIUMrsRAnEuGyRoRLXKXWUb943+PFoKQ==}
+  /@prisma/engines-version@5.1.1-1.6a3747c37ff169c90047725a05a6ef02e32ac97e:
+    resolution: {integrity: sha512-owZqbY/wucbr65bXJ/ljrHPgQU5xXTSkmcE/JcbqE1kusuAXV/TLN3/exmz21SZ5rJ7WDkyk70J2G/n68iogbQ==}
 
-  /@prisma/engines@5.0.0:
-    resolution: {integrity: sha512-kyT/8fd0OpWmhAU5YnY7eP31brW1q1YrTGoblWrhQJDiN/1K+Z8S1kylcmtjqx5wsUGcP1HBWutayA/jtyt+sg==}
+  /@prisma/engines@5.1.1:
+    resolution: {integrity: sha512-NV/4nVNWFZSJCCIA3HIFJbbDKO/NARc9ej0tX5S9k2EVbkrFJC4Xt9b0u4rNZWL4V+F5LAjvta8vzEUw0rw+HA==}
     requiresBuild: true
 
-  /@prisma/generator-helper@4.16.2:
-    resolution: {integrity: sha512-bMOH7y73Ui7gpQrioFeavMQA+Tf8ksaVf8Nhs9rQNzuSg8SSV6E9baczob0L5KGZTSgYoqnrRxuo03kVJYrnIg==}
+  /@prisma/generator-helper@5.1.1:
+    resolution: {integrity: sha512-Qk9iiVk4JZQYZrYsc1Wx9fXFFnS1AH4T7WyLxCIFnX/end0K5tOK75Qxv6mjZAHE0XUGrzoTlZUkbSDVYz/CvQ==}
     dependencies:
-      '@prisma/debug': 4.16.2
+      '@prisma/debug': 5.1.1
       '@types/cross-spawn': 6.0.2
       cross-spawn: 7.0.3
       kleur: 4.1.5
@@ -6352,13 +6352,13 @@ packages:
     hasBin: true
     dev: true
 
-  /prisma@5.0.0:
-    resolution: {integrity: sha512-KYWk83Fhi1FH59jSpavAYTt2eoMVW9YKgu8ci0kuUnt6Dup5Qy47pcB4/TLmiPAbhGrxxSz7gsSnJcCmkyPANA==}
+  /prisma@5.1.1:
+    resolution: {integrity: sha512-WJFG/U7sMmcc6TjJTTifTfpI6Wjoh55xl4AzopVwAdyK68L9/ogNo8QQ2cxuUjJf/Wa82z/uhyh3wMzvRIBphg==}
     engines: {node: '>=16.13'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 5.0.0
+      '@prisma/engines': 5.1.1
 
   /process-warning@2.2.0:
     resolution: {integrity: sha512-/1WZ8+VQjR6avWOgHeEPd7SDQmFQ1B5mC1eRXsCm5TarlNmx/wCsa5GEaxGm05BORRtyG/Ex/3xq3TuRvq57qg==}

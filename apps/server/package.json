@@ -26,7 +26,7 @@
     "@babel/core": "^7.22.9",
     "@graphql-codegen/cli": "^4.0.1",
     "@graphql-codegen/client-preset": "^4.0.1",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.1.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "9.0.2",
     "@types/node": "20.4.2",
@@ -45,9 +45,9 @@
     "@graphql-yoga/plugin-disable-introspection": "^1.0.3",
     "@graphql-yoga/subscription": "4.0.0",
     "@pothos/core": "^3.30.0",
-    "@pothos/plugin-prisma": "^3.52.0",
+    "@pothos/plugin-prisma": "^3.55.0",
     "@pothos/plugin-relay": "^3.43.0",
-    "@pothos/plugin-scope-auth": "^3.19.2",
+    "@pothos/plugin-scope-auth": "^3.20.0",
     "@pothos/plugin-simple-objects": "^3.7.0",
     "@pothos/plugin-validation": "^3.9.2",
     "bcryptjs": "^2.4.3",
@@ -58,7 +58,7 @@
     "graphql-yoga": "4.0.3",
     "jsonwebtoken": "^9.0.1",
     "logger": "workspace:*",
-    "prisma": "^5.0.0",
+    "prisma": "^5.1.1",
     "zod": "^3.21.4"
   }
 }

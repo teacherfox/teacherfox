@@ -25,6 +25,9 @@ export const readOnlyPrisma = new PrismaClient({
 
 interface AuthenticatedContext extends GraphQLContext {
   currentUserId: NonNullable<GraphQLContext['currentUserId']>;
+  isAdmin: NonNullable<GraphQLContext['isAdmin']>;
+  isTeacher: NonNullable<GraphQLContext['isTeacher']>;
+  isStudent: NonNullable<GraphQLContext['isStudent']>;
 }
 
 export const builder = new SchemaBuilder<{

@@ -23,8 +23,35 @@ model User {
   forgetPassword   ForgetPassword?
   googleId         String?         @unique @map("google_id")
   photo            String?         @map("photo_url")
+  roles            UserRole[]
 
   @@map("users")
+}
+
+enum RoleEnum {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model Role {
+  id    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  RoleEnum   @unique
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  roleId    String   @map("role_id") @db.Uuid
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("user_roles")
 }
 
 model Message {
