@@ -7,9 +7,20 @@ export const UserDto = builder.prismaObject('User', {
     name: t.exposeString('name'),
     email: t.exposeString('email'),
     createdAt: t.expose('createdAt', { type: 'Date' }),
-    forgetPassword: t.relation('forgetPassword'),
+    forgetPassword: t.relation('forgetPassword', { nullable: true }),
     messagesSent: t.relation('messagesSent'),
     messagesReceived: t.relation('messagesReceived'),
+    roles: t.field({
+      type: [RoleDto],
+      select: (_args, _ctx, nestedSelection) => ({
+        roles: {
+          select: {
+            role: nestedSelection(true),
+          },
+        },
+      }),
+      resolve: (user) => user.roles?.map(({ role }) => role) ?? [],
+    }),
   }),
 });
 
@@ -42,5 +53,21 @@ export const TokenUserDto = builder
 export const GenerateGoogleAuthUrlResponseDto = builder.simpleObject('GenerateGoogleAuthUrlResponse', {
   fields: (t) => ({
     url: t.string({ nullable: false }),
+  }),
+});
+
+export enum UserRoleEnum {
+  STUDENT = 'STUDENT',
+  TEACHER = 'TEACHER',
+}
+
+export const UserRoleEnumDto = builder.enumType(UserRoleEnum, {
+  name: 'UserRoleEnum',
+});
+
+export const RoleDto = builder.prismaObject('Role', {
+  select: { id: true },
+  fields: (t) => ({
+    name: t.exposeString('name'),
   }),
 });

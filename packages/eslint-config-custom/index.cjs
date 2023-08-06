@@ -1,6 +1,7 @@
 /** @type {import('@typescript-eslint/utils').TSESLint.Linter.Config} */
 const eslintrcConfig = {
-  extends: ["turbo", "prettier"]
+  extends: ["turbo", "prettier"],
+  ignorePatterns: ["**/dist/**"],
 };
 
 module.exports = eslintrcConfig;

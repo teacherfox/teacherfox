@@ -3,9 +3,10 @@ import { GraphQLError } from 'graphql';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
 import { sendForgetPasswordEmail } from '../../email.js';
-import { createJwt, createPassword, passwordsMatch } from '../../contexts/user.js';
-import { ForgetPasswordDto, TokenUserDto, UserDto } from './userTypes.js';
+import { createPassword, passwordsMatch } from '../../contexts/user.js';
+import { ForgetPasswordDto, TokenUserDto, UserDto, UserRoleEnumDto } from './userTypes.js';
 import { queryFromInfo } from '@pothos/plugin-prisma';
+import { createJwt } from '../../auth.js';
 
 const usernameSchema = z.string().min(3).max(30);
 const emailSchema = z.string().email();
@@ -49,6 +50,7 @@ builder.mutationFields((t) => ({
       email: t.arg.string({ required: true }),
       password: t.arg.string({ required: true }),
       name: t.arg.string({ required: true }),
+      role: t.arg({ type: UserRoleEnumDto, required: true }),
     },
     validate: (args) => signUpSchema.parse(args) && true,
     resolve: async (root, args, ctx, info) => {
@@ -66,9 +68,24 @@ builder.mutationFields((t) => ({
       const password = await createPassword(args.password);
       const user = await prisma.user.create({
         ...query,
-        data: { ...args, password },
+        include: { roles: { select: { role: true } } },
+        data: {
+          email: args.email,
+          name: args.name,
+          password,
+          roles: {
+            create: {
+              role: {
+                connectOrCreate: {
+                  create: { name: args.role },
+                  where: { name: args.role },
+                },
+              },
+            },
+          },
+        },
       });
-      const token = createJwt(user.id);
+      const token = createJwt(user.id, user.roles.map((r) => r.role.name));
       return { token, user };
     },
   }),
@@ -77,6 +94,7 @@ builder.mutationFields((t) => ({
     args: {
       email: t.arg.string({ required: true }),
       password: t.arg.string({ required: true }),
+      role: t.arg({ type: UserRoleEnumDto, required: true }),
     },
     validate: (args) => loginSchema.parse(args) && true,
     resolve: async (root, args, ctx, info) => {
@@ -87,7 +105,8 @@ builder.mutationFields((t) => ({
       });
       const user = await readOnlyPrisma.user.findUnique({
         ...query,
-        where: { email: args.email },
+        include: { roles: { select: { role: true } } },
+        where: { email: args.email, roles: { some: { role: { name: args.role } } } },
       });
       if (!user) {
         throw new GraphQLError('Invalid credentials');
@@ -96,8 +115,8 @@ builder.mutationFields((t) => ({
       if (!valid) {
         throw new GraphQLError('Invalid credentials');
       }
-      const token = createJwt(user.id);
-      return { token, user };
+      const token = createJwt(user.id, user.roles.map((r) => r.role.name));
+      return { token, user: user };
     },
   }),
   updateUser: t.withAuth({ authenticated: true }).prismaField({
