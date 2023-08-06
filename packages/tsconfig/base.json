@@ -13,10 +13,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022",
-    "resolveJsonModule": true
+    "target": "ES2022"
   },
   "exclude": ["node_modules"]
 }

@@ -12,7 +12,6 @@
     "module": "esnext",
     "noEmit": true,
     "plugins": [{ "name": "next" }],
-    "resolveJsonModule": true,
     "strict": false,
     "target": "ES2022"
   },
