@@ -133,15 +133,15 @@ data "aws_vpc_endpoint_service" "ssm" {
   service = "ssm"
 }
 
-resource "aws_vpc_endpoint" "ssm" {
-  vpc_id              = var.vpc_id
-  vpc_endpoint_type   = "Interface"
-  service_name        = data.aws_vpc_endpoint_service.ssm.service_name
-  subnet_ids          = var.private_subnet_ids
-  security_group_ids  = [var.endpoint_interface_id, aws_security_group.ssm_host.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-ssm-endpoint" }
-}
+#resource "aws_vpc_endpoint" "ssm" {
+#  vpc_id              = var.vpc_id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = data.aws_vpc_endpoint_service.ssm.service_name
+#  subnet_ids          = var.private_subnet_ids
+#  security_group_ids  = [var.endpoint_interface_id, aws_security_group.ssm_host.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-ssm-endpoint" }
+#}
 
 # data "aws_iam_policy_document" "ssm_commands_read_only" {
 #   statement {
