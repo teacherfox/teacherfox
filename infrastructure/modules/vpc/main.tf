@@ -241,132 +241,132 @@ resource "aws_security_group_rule" "interface_https_quic" {
   security_group_id = aws_security_group.endpoint_interface.id
 }
 
-resource "aws_vpc_endpoint" "ec2" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ec2"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ec2" }
-}
-
-resource "aws_vpc_endpoint" "ec2messages" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ec2messages"
-  subnet_ids          = [aws_subnet.private[0].id]
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ec2messages" }
-}
-
-resource "aws_vpc_endpoint" "ecs" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ecs"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ecs" }
-}
-
-resource "aws_vpc_endpoint" "kms" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.kms"
-  subnet_ids          = [aws_subnet.private[0].id]
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-kms" }
-}
-
-resource "aws_vpc_endpoint" "logs" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.logs"
-  subnet_ids          = [aws_subnet.private[0].id]
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-logs" }
-}
-
-resource "aws_vpc_endpoint" "qldb" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.qldb.session"
-  subnet_ids          = [aws_subnet.private[0].id]
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-qldb" }
-}
-
-resource "aws_vpc_endpoint" "s3" {
-  for_each          = toset(local.endpoint_regions)
-  service_name      = "com.amazonaws.${each.key}.s3"
-  vpc_id            = aws_vpc.main.id
-  vpc_endpoint_type = "Gateway"
-  route_table_ids   = local.route_table_ids
-  tags              = { Name = "${var.environment}-${each.key}-s3" }
-}
-
-resource "aws_vpc_endpoint" "secretsmanager" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.secretsmanager"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-secretsmanager" }
-}
-
-resource "aws_vpc_endpoint" "ecr_api" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ecr.api"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ecr-api" }
-}
-
-resource "aws_vpc_endpoint" "ecr_dkr" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ecr.dkr"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ecr-dkr" }
-}
-
-resource "aws_vpc_endpoint" "sqs" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.sqs"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-sqs" }
-}
-
-resource "aws_vpc_endpoint" "ssmmessages" {
-  for_each            = toset(local.endpoint_regions)
-  vpc_id              = aws_vpc.main.id
-  vpc_endpoint_type   = "Interface"
-  service_name        = "com.amazonaws.${each.key}.ssmmessages"
-  subnet_ids          = aws_subnet.private.*.id
-  security_group_ids  = [aws_security_group.endpoint_interface.id]
-  private_dns_enabled = true
-  tags                = { Name = "${var.environment}-${each.key}-ssmmessages" }
-}
+#resource "aws_vpc_endpoint" "ec2" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ec2"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ec2" }
+#}
+#
+#resource "aws_vpc_endpoint" "ec2messages" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ec2messages"
+#  subnet_ids          = [aws_subnet.private[0].id]
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ec2messages" }
+#}
+#
+#resource "aws_vpc_endpoint" "ecs" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ecs"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ecs" }
+#}
+#
+#resource "aws_vpc_endpoint" "kms" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.kms"
+#  subnet_ids          = [aws_subnet.private[0].id]
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-kms" }
+#}
+#
+#resource "aws_vpc_endpoint" "logs" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.logs"
+#  subnet_ids          = [aws_subnet.private[0].id]
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-logs" }
+#}
+#
+#resource "aws_vpc_endpoint" "qldb" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.qldb.session"
+#  subnet_ids          = [aws_subnet.private[0].id]
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-qldb" }
+#}
+#
+#resource "aws_vpc_endpoint" "s3" {
+#  for_each          = toset(local.endpoint_regions)
+#  service_name      = "com.amazonaws.${each.key}.s3"
+#  vpc_id            = aws_vpc.main.id
+#  vpc_endpoint_type = "Gateway"
+#  route_table_ids   = local.route_table_ids
+#  tags              = { Name = "${var.environment}-${each.key}-s3" }
+#}
+#
+#resource "aws_vpc_endpoint" "secretsmanager" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.secretsmanager"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-secretsmanager" }
+#}
+#
+#resource "aws_vpc_endpoint" "ecr_api" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ecr.api"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ecr-api" }
+#}
+#
+#resource "aws_vpc_endpoint" "ecr_dkr" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ecr.dkr"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ecr-dkr" }
+#}
+#
+#resource "aws_vpc_endpoint" "sqs" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.sqs"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-sqs" }
+#}
+#
+#resource "aws_vpc_endpoint" "ssmmessages" {
+#  for_each            = toset(local.endpoint_regions)
+#  vpc_id              = aws_vpc.main.id
+#  vpc_endpoint_type   = "Interface"
+#  service_name        = "com.amazonaws.${each.key}.ssmmessages"
+#  subnet_ids          = aws_subnet.private.*.id
+#  security_group_ids  = [aws_security_group.endpoint_interface.id]
+#  private_dns_enabled = true
+#  tags                = { Name = "${var.environment}-${each.key}-ssmmessages" }
+#}
