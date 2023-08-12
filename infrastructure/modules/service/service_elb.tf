@@ -4,7 +4,7 @@ resource "aws_lb" "service_lb" {
   drop_invalid_header_fields = true
   internal                   = false
   enable_http2               = true
-  enable_deletion_protection = var.environment == "prod" ? true : false
+  enable_deletion_protection = false
   ip_address_type            = "dualstack"
   subnets                    = var.lb_subnet_ids
   security_groups            = [aws_security_group.lb_service.id]
