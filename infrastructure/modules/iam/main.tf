@@ -240,10 +240,10 @@ resource "aws_iam_role_policy_attachment" "developer_billing_policy_attach" {
   policy_arn = "arn:aws:iam::aws:policy/AWSBillingReadOnlyAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "server_policy_attach" {
-  role       = aws_iam_role.developer_role.name
-  policy_arn = var.server_task_role_policy_arn
-}
+#resource "aws_iam_role_policy_attachment" "server_policy_attach" {
+#  role       = aws_iam_role.developer_role.name
+#  policy_arn = var.server_task_role_policy_arn
+#}
 
 resource "aws_iam_policy" "developer_assume_policy" {
   name        = "DeveloperAssumePolicy"
