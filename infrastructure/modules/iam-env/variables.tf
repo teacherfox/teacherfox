@@ -18,6 +18,6 @@ variable "github_audience" {
   type = string
 }
 
-variable "ses_identity_arn" {
-  type = string
-}
+#variable "ses_identity_arn" {
+#  type = string
+#}

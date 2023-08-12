@@ -46,15 +46,15 @@ resource "aws_iam_role_policy_attachment" "github_server_deploy" {
   policy_arn = aws_iam_policy.service_deploy.arn
 }
 
-data "aws_iam_policy_document" "server_task_role_policy_document" {
-  statement {
-    actions   = ["ses:SendTemplatedEmail"]
-    effect    = "Allow"
-    resources = [var.ses_identity_arn]
-  }
-}
-
-resource "aws_iam_policy" "server_task_role_policy" {
-  name   = "${var.environment}-server-task-role-policy"
-  policy = data.aws_iam_policy_document.server_task_role_policy_document.json
-}
+#data "aws_iam_policy_document" "server_task_role_policy_document" {
+#  statement {
+#    actions   = ["ses:SendTemplatedEmail"]
+#    effect    = "Allow"
+#    resources = [var.ses_identity_arn]
+#  }
+#}
+#
+#resource "aws_iam_policy" "server_task_role_policy" {
+#  name   = "${var.environment}-server-task-role-policy"
+#  policy = data.aws_iam_policy_document.server_task_role_policy_document.json
+#}

@@ -45,16 +45,16 @@ provider "aws" {
   }
 }
 
-#module "iam_env" {
-#  source                             = "../../modules/iam-env"
-#  environment                        = var.environment
-#  github_audience                    = data.tfe_outputs.prod_outputs.values.github_audience
-#  github_openid_connect_provider_arn = data.tfe_outputs.prod_outputs.values.github_openid_connect_provider_arn
-#  github_provider_url                = data.tfe_outputs.prod_outputs.values.github_provider_url
-#  organization                       = local.organization
+module "iam_env" {
+  source                             = "../../modules/iam-env"
+  environment                        = var.environment
+  github_audience                    = data.tfe_outputs.prod_outputs.values.github_audience
+  github_openid_connect_provider_arn = data.tfe_outputs.prod_outputs.values.github_openid_connect_provider_arn
+  github_provider_url                = data.tfe_outputs.prod_outputs.values.github_provider_url
+  organization                       = local.organization
 #  ses_identity_arn                   = module.ses.identity_arn
-#}
-#
+}
+
 #module "route53" {
 #  source       = "../../modules/route53"
 #  environment  = var.environment
