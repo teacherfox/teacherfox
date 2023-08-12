@@ -40,7 +40,7 @@ resource "aws_rds_cluster" "this" {
   database_name                       = replace(local.name, "-", "_")
   #  db_cluster_instance_class           = var.db_cluster_instance_class
   db_subnet_group_name                = aws_db_subnet_group.db_subnet_group.name
-  deletion_protection                 = local.is_prod
+  deletion_protection                 = false
   enabled_cloudwatch_logs_exports     = var.enabled_cloudwatch_logs_exports
   engine                              = data.aws_rds_engine_version.postgresql.engine
   engine_mode                         = "provisioned"
