@@ -40,22 +40,22 @@ provider "aws" {
   }
 }
 
-module "iam" {
-  source                      = "../../modules/iam"
-  environments                = [var.environment, "dev", "staging"]
-  organization                = local.organization
-#  server_task_role_policy_arn = module.iam_env.server_task_role_policy_arn
-}
-
-module "iam_env" {
-  source                             = "../../modules/iam-env"
-  environment                        = var.environment
-  github_audience                    = module.iam.github_audience
-  github_openid_connect_provider_arn = module.iam.github_openid_connect_provider_arn
-  github_provider_url                = module.iam.github_provider_url
-  organization                       = local.organization
-#  ses_identity_arn                   = module.ses.identity_arn
-}
+#module "iam" {
+#  source                      = "../../modules/iam"
+#  environments                = [var.environment, "dev", "staging"]
+#  organization                = local.organization
+##  server_task_role_policy_arn = module.iam_env.server_task_role_policy_arn
+#}
+#
+#module "iam_env" {
+#  source                             = "../../modules/iam-env"
+#  environment                        = var.environment
+#  github_audience                    = module.iam.github_audience
+#  github_openid_connect_provider_arn = module.iam.github_openid_connect_provider_arn
+#  github_provider_url                = module.iam.github_provider_url
+#  organization                       = local.organization
+##  ses_identity_arn                   = module.ses.identity_arn
+#}
 
 #module "route53" {
 #  source       = "../../modules/route53"
