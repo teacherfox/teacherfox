@@ -40,13 +40,13 @@ provider "aws" {
   }
 }
 
-#module "iam" {
-#  source                      = "../../modules/iam"
-#  environments                = [var.environment, "dev", "staging"]
-#  organization                = local.organization
-##  server_task_role_policy_arn = module.iam_env.server_task_role_policy_arn
-#}
-#
+module "iam" {
+  source                      = "../../modules/iam"
+  environments                = [var.environment, "dev", "staging"]
+  organization                = local.organization
+#  server_task_role_policy_arn = module.iam_env.server_task_role_policy_arn
+}
+
 #module "iam_env" {
 #  source                             = "../../modules/iam-env"
 #  environment                        = var.environment
